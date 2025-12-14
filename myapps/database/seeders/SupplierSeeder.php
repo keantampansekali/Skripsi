@@ -4,121 +4,157 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Supplier;
-use App\Models\SupplierContact;
-use App\Models\Cabang;
 
 class SupplierSeeder extends Seeder
 {
     public function run(): void
     {
-        $ambon = Cabang::where('nama_cabang', 'Ambon')->first();
-        $lombok = Cabang::where('nama_cabang', 'Lombok')->first();
-
-        if (!$ambon || !$lombok) {
-            $this->command->error('Cabang Ambon atau Lombok tidak ditemukan. Pastikan CabangSeeder sudah dijalankan.');
-            return;
-        }
-
-        // Data supplier untuk makanan cepat saji
-        $suppliersData = [
+        $data = [
             [
-                'nama_supplier' => 'PT Sumber Pangan Sejahtera',
-                'alamat' => 'Jl. Raya Sudirman No. 45, Jakarta Pusat',
-                'kontak' => [
-                    ['tipe' => 'telp', 'nilai' => '021-5551234'],
-                    ['tipe' => 'wa', 'nilai' => '081234567890'],
-                    ['tipe' => 'email', 'nilai' => 'info@sumberpangan.com'],
-                ],
+                'id' => 1,
+                'id_cabang' => 1,
+                'nama_supplier' => 'test',
+                'alamat' => null,
+                'created_at' => '2025-10-31 13:35:16',
+                'updated_at' => '2025-10-31 13:35:16',
             ],
             [
+                'id' => 2,
+                'id_cabang' => 1,
+                'nama_supplier' => 'PT Sumber Pangan Sejahtera',
+                'alamat' => 'Jl. Karang panjang No. 45, Kota Ambon',
+                'created_at' => '2025-11-27 16:24:42',
+                'updated_at' => '2025-11-27 16:29:45',
+            ],
+            [
+                'id' => 3,
+                'id_cabang' => 1,
+                'nama_supplier' => 'CV Daging Segar Makmur',
+                'alamat' => 'Jl. Laha No. 128, Kota Ambon',
+                'created_at' => '2025-11-27 16:24:42',
+                'updated_at' => '2025-11-27 16:30:20',
+            ],
+            [
+                'id' => 4,
+                'id_cabang' => 1,
+                'nama_supplier' => 'PT Sayur Segar Indonesia',
+                'alamat' => 'Jl. Gunung Nona No. 89, Kota Ambon',
+                'created_at' => '2025-11-27 16:24:42',
+                'updated_at' => '2025-11-27 16:30:48',
+            ],
+            [
+                'id' => 5,
+                'id_cabang' => 1,
+                'nama_supplier' => 'UD Roti Nusantara',
+                'alamat' => 'Jl. passo. 12, Kota Ambon',
+                'created_at' => '2025-11-27 16:24:42',
+                'updated_at' => '2025-11-27 16:31:22',
+            ],
+            [
+                'id' => 6,
+                'id_cabang' => 1,
+                'nama_supplier' => 'PT Minuman Segar Abadi',
+                'alamat' => 'Jl. Kebun Cengkeh No. 78, Kota Ambon',
+                'created_at' => '2025-11-27 16:24:42',
+                'updated_at' => '2025-11-27 16:31:12',
+            ],
+            [
+                'id' => 7,
+                'id_cabang' => 1,
+                'nama_supplier' => 'CV Bumbu Dapur Lengkap',
+                'alamat' => 'Jl. Waihaong No. 56, Kota Ambon',
+                'created_at' => '2025-11-27 16:24:42',
+                'updated_at' => '2025-11-27 16:38:37',
+            ],
+            [
+                'id' => 8,
+                'id_cabang' => 1,
+                'nama_supplier' => 'PT Kemasan Modern',
+                'alamat' => 'Jl. Pattimura No. 34, Kota Ambon',
+                'created_at' => '2025-11-27 16:24:42',
+                'updated_at' => '2025-11-27 16:39:01',
+            ],
+            [
+                'id' => 9,
+                'id_cabang' => 1,
+                'nama_supplier' => 'UD Ayam Potong Segar',
+                'alamat' => 'Jl. Ay patty, Kota Ambon',
+                'created_at' => '2025-11-27 16:24:42',
+                'updated_at' => '2025-11-27 16:43:01',
+            ],
+            [
+                'id' => 10,
+                'id_cabang' => 2,
+                'nama_supplier' => 'PT Sumber Pangan Sejahtera',
+                'alamat' => 'Jl. Rijali No. 45, Kota Ambon',
+                'created_at' => '2025-11-27 16:24:42',
+                'updated_at' => '2025-11-27 16:42:54',
+            ],
+            [
+                'id' => 11,
+                'id_cabang' => 2,
                 'nama_supplier' => 'CV Daging Segar Makmur',
                 'alamat' => 'Jl. Gatot Subroto No. 128, Jakarta Selatan',
-                'kontak' => [
-                    ['tipe' => 'telp', 'nilai' => '021-5555678'],
-                    ['tipe' => 'wa', 'nilai' => '081234567891'],
-                    ['tipe' => 'email', 'nilai' => 'order@dagingsegar.com'],
-                ],
+                'created_at' => '2025-11-27 16:24:42',
+                'updated_at' => '2025-11-27 16:24:42',
             ],
             [
+                'id' => 12,
+                'id_cabang' => 2,
                 'nama_supplier' => 'PT Sayur Segar Indonesia',
-                'alamat' => 'Jl. Pasar Minggu Raya No. 89, Jakarta Selatan',
-                'kontak' => [
-                    ['tipe' => 'telp', 'nilai' => '021-5559012'],
-                    ['tipe' => 'wa', 'nilai' => '081234567892'],
-                ],
+                'alamat' => 'Jl. Latuhalat No. 89, Kota Ambon',
+                'created_at' => '2025-11-27 16:24:42',
+                'updated_at' => '2025-11-27 16:43:49',
             ],
             [
+                'id' => 13,
+                'id_cabang' => 2,
                 'nama_supplier' => 'UD Roti Bakar Nusantara',
-                'alamat' => 'Jl. Cikini Raya No. 12, Jakarta Pusat',
-                'kontak' => [
-                    ['tipe' => 'telp', 'nilai' => '021-5553456'],
-                    ['tipe' => 'wa', 'nilai' => '081234567893'],
-                    ['tipe' => 'email', 'nilai' => 'sales@roti-nusantara.com'],
-                ],
+                'alamat' => 'Jl. Lampu Lima, Jakarta Pusat',
+                'created_at' => '2025-11-27 16:24:42',
+                'updated_at' => '2025-11-27 16:44:02',
             ],
             [
+                'id' => 14,
+                'id_cabang' => 2,
                 'nama_supplier' => 'PT Minuman Segar Abadi',
-                'alamat' => 'Jl. Thamrin No. 78, Jakarta Pusat',
-                'kontak' => [
-                    ['tipe' => 'telp', 'nilai' => '021-5557890'],
-                    ['tipe' => 'wa', 'nilai' => '081234567894'],
-                    ['tipe' => 'email', 'nilai' => 'order@minumansegar.com'],
-                ],
+                'alamat' => 'Jl. Galala. 78, Kota Ambon',
+                'created_at' => '2025-11-27 16:24:42',
+                'updated_at' => '2025-11-27 16:45:16',
             ],
             [
+                'id' => 15,
+                'id_cabang' => 2,
                 'nama_supplier' => 'CV Bumbu Dapur Lengkap',
-                'alamat' => 'Jl. Kebon Jeruk No. 56, Jakarta Barat',
-                'kontak' => [
-                    ['tipe' => 'telp', 'nilai' => '021-5552345'],
-                    ['tipe' => 'wa', 'nilai' => '081234567895'],
-                ],
+                'alamat' => 'Jl. Lateri. 56, Kota Ambon',
+                'created_at' => '2025-11-27 16:24:42',
+                'updated_at' => '2025-11-27 16:46:05',
             ],
             [
+                'id' => 16,
+                'id_cabang' => 2,
                 'nama_supplier' => 'PT Kemasan Modern',
-                'alamat' => 'Jl. Industri Raya No. 34, Tangerang',
-                'kontak' => [
-                    ['tipe' => 'telp', 'nilai' => '021-5556789'],
-                    ['tipe' => 'wa', 'nilai' => '081234567896'],
-                    ['tipe' => 'email', 'nilai' => 'info@kemasanmodern.com'],
-                ],
+                'alamat' => 'Jl. Nania No. 34, Kota Ambon',
+                'created_at' => '2025-11-27 16:24:42',
+                'updated_at' => '2025-11-27 16:46:28',
             ],
             [
+                'id' => 17,
+                'id_cabang' => 2,
                 'nama_supplier' => 'UD Ayam Potong Segar',
-                'alamat' => 'Jl. Pasar Induk Kramat Jati, Jakarta Timur',
-                'kontak' => [
-                    ['tipe' => 'telp', 'nilai' => '021-5550123'],
-                    ['tipe' => 'wa', 'nilai' => '081234567897'],
-                ],
+                'alamat' => 'Jl. Urimessing, kota ambon',
+                'created_at' => '2025-11-27 16:24:42',
+                'updated_at' => '2025-11-27 16:26:38',
             ],
         ];
 
-        // Insert untuk setiap cabang
-        foreach ([$ambon, $lombok] as $cabang) {
-            foreach ($suppliersData as $supplierData) {
-                $supplier = Supplier::updateOrCreate(
-                    [
-                        'id_cabang' => $cabang->id_cabang,
-                        'nama_supplier' => $supplierData['nama_supplier'],
-                    ],
-                    [
-                        'alamat' => $supplierData['alamat'],
-                    ]
-                );
-
-                // Hapus kontak lama untuk supplier ini (jika ada) dan buat yang baru
-                $supplier->contacts()->delete();
-
-                // Tambahkan kontak
-                foreach ($supplierData['kontak'] as $kontak) {
-                    $supplier->contacts()->create([
-                        'tipe' => $kontak['tipe'],
-                        'nilai' => $kontak['nilai'],
-                    ]);
-                }
-            }
+        foreach ($data as $item) {
+            Supplier::updateOrCreate(
+                ['id' => $item['id']],
+                $item
+            );
         }
 
-        $this->command->info('Supplier berhasil di-seed untuk semua cabang!');
+        $this->command->info('Supplier berhasil di-seed!');
     }
 }
-

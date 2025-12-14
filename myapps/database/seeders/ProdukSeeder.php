@@ -4,205 +4,318 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Produk;
-use App\Models\Cabang;
 
 class ProdukSeeder extends Seeder
 {
     public function run(): void
     {
-        $ambon = Cabang::where('nama_cabang', 'Ambon')->first();
-        $lombok = Cabang::where('nama_cabang', 'Lombok')->first();
-
-        if (!$ambon || !$lombok) {
-            $this->command->error('Cabang Ambon atau Lombok tidak ditemukan. Pastikan CabangSeeder sudah dijalankan.');
-            return;
-        }
-
-        // Data produk makanan cepat saji untuk cabang Ambon
-        $produkAmbon = [
-            // Burger
+        $data = [
             [
-                'id_cabang' => $ambon->id_cabang,
-                'nama_produk' => 'Burger Sapi 1',
-                'deskripsi' => 'Burger dengan daging sapi, keju, dan sayuran',
-                'harga' => 25000,
-                'stok' => 50,
+                'id' => 19,
+                'id_cabang' => 1,
+                'nama_produk' => 'Paket C (1 nasi + 2 Paha atas / Paha Bawah + minum)',
+                'deskripsi' => '1 nasi + 1 potongan besar + 1 potongan kecil + minum',
+                'harga' => 15000.00,
+                'stok' => 9,
+                'foto' => 'uploads/produk/1762371642_fried-chicken-rice-fast-food-sauce-50865466.jpg',
+                'created_at' => '2025-10-31 11:17:32',
+                'updated_at' => '2025-11-18 11:12:43',
             ],
             [
-                'id_cabang' => $ambon->id_cabang,
-                'nama_produk' => 'Burger Sapi 2',
-                'deskripsi' => 'Burger double dengan daging sapi',
-                'harga' => 35000,
-                'stok' => 30,
-            ],
-            // Hotdog
-            [
-                'id_cabang' => $ambon->id_cabang,
-                'nama_produk' => 'Hotdog Sosis Ayam',
-                'deskripsi' => 'Hotdog dengan sosis ayam dan saus',
-                'harga' => 20000,
-                'stok' => 40,
+                'id' => 20,
+                'id_cabang' => 2,
+                'nama_produk' => 'test',
+                'deskripsi' => 'test',
+                'harga' => 15000.00,
+                'stok' => 19,
+                'foto' => null,
+                'created_at' => '2025-10-31 11:19:32',
+                'updated_at' => '2025-11-18 03:02:22',
             ],
             [
-                'id_cabang' => $ambon->id_cabang,
-                'nama_produk' => 'Hotdog Sosis Sapi',
-                'deskripsi' => 'Hotdog dengan sosis sapi premium',
-                'harga' => 25000,
+                'id' => 21,
+                'id_cabang' => 1,
+                'nama_produk' => 'Paket B (1 nasi + 1 Dada/Paha Atas + minum)',
+                'deskripsi' => '1 nasi + 1 potongan besar + minum',
+                'harga' => 18000.00,
+                'stok' => 5,
+                'foto' => 'uploads/produk/1762371528_fried-chicken-rice-fast-food-sauce-50865466.jpg',
+                'created_at' => '2025-10-31 11:24:13',
+                'updated_at' => '2025-11-18 07:58:05',
+            ],
+            [
+                'id' => 22,
+                'id_cabang' => 1,
+                'nama_produk' => 'Paket A (1 nasi + 1 Sayap/Paha Bawah + minum)',
+                'deskripsi' => '1 nasi + 1 potongan kecil + minum',
+                'harga' => 14000.00,
+                'stok' => 6,
+                'foto' => 'uploads/produk/1762371238_fried-chicken-rice-fast-food-sauce-50865466.jpg',
+                'created_at' => '2025-10-31 11:57:32',
+                'updated_at' => '2025-12-13 09:16:02',
+            ],
+            [
+                'id' => 32,
+                'id_cabang' => 2,
+                'nama_produk' => 'Ayam Taliwang',
+                'deskripsi' => 'Ayam bakar bumbu khas Lombok',
+                'harga' => 35000.00,
+                'stok' => 39,
+                'foto' => null,
+                'created_at' => '2025-11-06 02:25:52',
+                'updated_at' => '2025-11-18 03:02:22',
+            ],
+            [
+                'id' => 33,
+                'id_cabang' => 2,
+                'nama_produk' => 'Pelecing Kangkung',
+                'deskripsi' => 'Kangkung dengan sambal khas Lombok',
+                'harga' => 15000.00,
+                'stok' => 59,
+                'foto' => null,
+                'created_at' => '2025-11-06 02:25:52',
+                'updated_at' => '2025-11-18 03:02:22',
+            ],
+            [
+                'id' => 34,
+                'id_cabang' => 2,
+                'nama_produk' => 'Sate Bulayak',
+                'deskripsi' => 'Sate khas Lombok dengan lontong',
+                'harga' => 28000.00,
                 'stok' => 35,
+                'foto' => null,
+                'created_at' => '2025-11-06 02:25:52',
+                'updated_at' => '2025-11-06 02:25:52',
             ],
-            // Side dishes
             [
-                'id_cabang' => $ambon->id_cabang,
+                'id' => 35,
+                'id_cabang' => 1,
+                'nama_produk' => 'Hotdog Sosis ayam',
+                'deskripsi' => 'Hotdog Sosis ayam',
+                'harga' => 15000.00,
+                'stok' => 3,
+                'foto' => 'uploads/produk/1762372086_hotdog.jpg',
+                'created_at' => '2025-11-06 02:48:06',
+                'updated_at' => '2025-12-13 09:16:01',
+            ],
+            [
+                'id' => 36,
+                'id_cabang' => 1,
+                'nama_produk' => 'Hotdog Sosis Sapi',
+                'deskripsi' => 'Hotdog Sosis Sapi',
+                'harga' => 18000.00,
+                'stok' => 4,
+                'foto' => 'uploads/produk/1762372207_hotdog.jpg',
+                'created_at' => '2025-11-06 02:50:01',
+                'updated_at' => '2025-12-05 08:59:53',
+            ],
+            [
+                'id' => 37,
+                'id_cabang' => 1,
+                'nama_produk' => 'Burger Sapi 1',
+                'deskripsi' => 'Burger Sapi',
+                'harga' => 15000.00,
+                'stok' => 1,
+                'foto' => 'uploads/produk/1762372471_burger.jpg',
+                'created_at' => '2025-11-06 02:54:25',
+                'updated_at' => '2025-12-13 09:14:02',
+            ],
+            [
+                'id' => 38,
+                'id_cabang' => 1,
+                'nama_produk' => 'Burger Sapi 2',
+                'deskripsi' => 'Burger Sapi + keju',
+                'harga' => 17000.00,
+                'stok' => 1,
+                'foto' => 'uploads/produk/1762372560_burger.jpg',
+                'created_at' => '2025-11-06 02:55:47',
+                'updated_at' => '2025-12-13 09:14:03',
+            ],
+            [
+                'id' => 39,
+                'id_cabang' => 1,
                 'nama_produk' => 'Kentang Goreng',
-                'deskripsi' => 'Kentang goreng crispy',
-                'harga' => 15000,
-                'stok' => 60,
-            ],
-            // Minuman
-            [
-                'id_cabang' => $ambon->id_cabang,
-                'nama_produk' => 'Coca Cola',
-                'deskripsi' => 'Minuman bersoda Coca Cola',
-                'harga' => 8000,
-                'stok' => 100,
+                'deskripsi' => 'Ori, Balado, Keju, BBQ',
+                'harga' => 10000.00,
+                'stok' => 5,
+                'foto' => 'uploads/produk/1762373166_kentang.jpg',
+                'created_at' => '2025-11-06 03:05:37',
+                'updated_at' => '2025-11-26 18:49:24',
             ],
             [
-                'id_cabang' => $ambon->id_cabang,
+                'id' => 40,
+                'id_cabang' => 1,
+                'nama_produk' => 'Coca cola',
+                'deskripsi' => 'Coca cola',
+                'harga' => 8000.00,
+                'stok' => 4,
+                'foto' => 'uploads/produk/1762373368_57413u_1000.jpg',
+                'created_at' => '2025-11-06 03:08:46',
+                'updated_at' => '2025-12-05 08:59:53',
+            ],
+            [
+                'id' => 41,
+                'id_cabang' => 1,
                 'nama_produk' => 'Sprite',
-                'deskripsi' => 'Minuman bersoda Sprite',
-                'harga' => 8000,
-                'stok' => 100,
+                'deskripsi' => 'Sprite',
+                'harga' => 10000.00,
+                'stok' => 8,
+                'foto' => 'uploads/produk/1762373533_sprite.jpg',
+                'created_at' => '2025-11-06 03:10:04',
+                'updated_at' => '2025-11-18 11:14:47',
             ],
-            // Paket
             [
-                'id_cabang' => $ambon->id_cabang,
+                'id' => 49,
+                'id_cabang' => 1,
                 'nama_produk' => 'Paket A',
                 'deskripsi' => 'Burger Sapi 1 + Kentang Goreng + Minuman',
-                'harga' => 40000,
-                'stok' => 25,
+                'harga' => 40000.00,
+                'stok' => 19,
+                'foto' => null,
+                'created_at' => '2025-11-18 11:25:20',
+                'updated_at' => '2025-12-13 09:17:02',
             ],
             [
-                'id_cabang' => $ambon->id_cabang,
+                'id' => 50,
+                'id_cabang' => 1,
                 'nama_produk' => 'Paket B',
                 'deskripsi' => 'Hotdog Sosis Ayam + Kentang Goreng + Minuman',
-                'harga' => 35000,
-                'stok' => 30,
+                'harga' => 35000.00,
+                'stok' => 25,
+                'foto' => null,
+                'created_at' => '2025-11-18 11:25:20',
+                'updated_at' => '2025-12-13 09:17:03',
             ],
             [
-                'id_cabang' => $ambon->id_cabang,
+                'id' => 51,
+                'id_cabang' => 1,
                 'nama_produk' => 'Paket C',
                 'deskripsi' => 'Burger Sapi 2 + Kentang Goreng + Minuman',
-                'harga' => 50000,
+                'harga' => 50000.00,
+                'stok' => 19,
+                'foto' => null,
+                'created_at' => '2025-11-18 11:25:20',
+                'updated_at' => '2025-12-13 09:17:02',
+            ],
+            [
+                'id' => 52,
+                'id_cabang' => 2,
+                'nama_produk' => 'Burger Sapi 1',
+                'deskripsi' => 'Burger dengan daging sapi, keju, dan sayuran',
+                'harga' => 25000.00,
+                'stok' => 50,
+                'foto' => null,
+                'created_at' => '2025-11-18 11:25:20',
+                'updated_at' => '2025-11-18 11:25:20',
+            ],
+            [
+                'id' => 53,
+                'id_cabang' => 2,
+                'nama_produk' => 'Burger Sapi 2',
+                'deskripsi' => 'Burger double dengan daging sapi',
+                'harga' => 35000.00,
+                'stok' => 30,
+                'foto' => null,
+                'created_at' => '2025-11-18 11:25:20',
+                'updated_at' => '2025-11-18 11:25:20',
+            ],
+            [
+                'id' => 54,
+                'id_cabang' => 2,
+                'nama_produk' => 'Hotdog Sosis Ayam',
+                'deskripsi' => 'Hotdog dengan sosis ayam dan saus',
+                'harga' => 20000.00,
+                'stok' => 40,
+                'foto' => null,
+                'created_at' => '2025-11-18 11:25:20',
+                'updated_at' => '2025-11-18 11:25:20',
+            ],
+            [
+                'id' => 55,
+                'id_cabang' => 2,
+                'nama_produk' => 'Hotdog Sosis Sapi',
+                'deskripsi' => 'Hotdog dengan sosis sapi premium',
+                'harga' => 25000.00,
+                'stok' => 35,
+                'foto' => null,
+                'created_at' => '2025-11-18 11:25:20',
+                'updated_at' => '2025-11-18 11:25:20',
+            ],
+            [
+                'id' => 56,
+                'id_cabang' => 2,
+                'nama_produk' => 'Kentang Goreng',
+                'deskripsi' => 'Kentang goreng crispy',
+                'harga' => 15000.00,
+                'stok' => 60,
+                'foto' => null,
+                'created_at' => '2025-11-18 11:25:20',
+                'updated_at' => '2025-11-18 11:25:20',
+            ],
+            [
+                'id' => 57,
+                'id_cabang' => 2,
+                'nama_produk' => 'Coca Cola',
+                'deskripsi' => 'Minuman bersoda Coca Cola',
+                'harga' => 8000.00,
+                'stok' => 100,
+                'foto' => null,
+                'created_at' => '2025-11-18 11:25:20',
+                'updated_at' => '2025-11-18 11:25:20',
+            ],
+            [
+                'id' => 58,
+                'id_cabang' => 2,
+                'nama_produk' => 'Sprite',
+                'deskripsi' => 'Minuman bersoda Sprite',
+                'harga' => 8000.00,
+                'stok' => 100,
+                'foto' => null,
+                'created_at' => '2025-11-18 11:25:20',
+                'updated_at' => '2025-11-18 11:25:20',
+            ],
+            [
+                'id' => 59,
+                'id_cabang' => 2,
+                'nama_produk' => 'Paket A',
+                'deskripsi' => 'Burger Sapi 1 + Kentang Goreng + Minuman',
+                'harga' => 40000.00,
+                'stok' => 25,
+                'foto' => null,
+                'created_at' => '2025-11-18 11:25:20',
+                'updated_at' => '2025-11-18 11:25:20',
+            ],
+            [
+                'id' => 60,
+                'id_cabang' => 2,
+                'nama_produk' => 'Paket B',
+                'deskripsi' => 'Hotdog Sosis Ayam + Kentang Goreng + Minuman',
+                'harga' => 35000.00,
+                'stok' => 30,
+                'foto' => null,
+                'created_at' => '2025-11-18 11:25:20',
+                'updated_at' => '2025-11-18 11:25:20',
+            ],
+            [
+                'id' => 61,
+                'id_cabang' => 2,
+                'nama_produk' => 'Paket C',
+                'deskripsi' => 'Burger Sapi 2 + Kentang Goreng + Minuman',
+                'harga' => 50000.00,
                 'stok' => 20,
+                'foto' => null,
+                'created_at' => '2025-11-18 11:25:20',
+                'updated_at' => '2025-11-18 11:25:20',
             ],
         ];
 
-        // Data produk makanan cepat saji untuk cabang Lombok (sama dengan Ambon)
-        $produkLombok = [
-            // Burger
-            [
-                'id_cabang' => $lombok->id_cabang,
-                'nama_produk' => 'Burger Sapi 1',
-                'deskripsi' => 'Burger dengan daging sapi, keju, dan sayuran',
-                'harga' => 25000,
-                'stok' => 50,
-            ],
-            [
-                'id_cabang' => $lombok->id_cabang,
-                'nama_produk' => 'Burger Sapi 2',
-                'deskripsi' => 'Burger double dengan daging sapi',
-                'harga' => 35000,
-                'stok' => 30,
-            ],
-            // Hotdog
-            [
-                'id_cabang' => $lombok->id_cabang,
-                'nama_produk' => 'Hotdog Sosis Ayam',
-                'deskripsi' => 'Hotdog dengan sosis ayam dan saus',
-                'harga' => 20000,
-                'stok' => 40,
-            ],
-            [
-                'id_cabang' => $lombok->id_cabang,
-                'nama_produk' => 'Hotdog Sosis Sapi',
-                'deskripsi' => 'Hotdog dengan sosis sapi premium',
-                'harga' => 25000,
-                'stok' => 35,
-            ],
-            // Side dishes
-            [
-                'id_cabang' => $lombok->id_cabang,
-                'nama_produk' => 'Kentang Goreng',
-                'deskripsi' => 'Kentang goreng crispy',
-                'harga' => 15000,
-                'stok' => 60,
-            ],
-            // Minuman
-            [
-                'id_cabang' => $lombok->id_cabang,
-                'nama_produk' => 'Coca Cola',
-                'deskripsi' => 'Minuman bersoda Coca Cola',
-                'harga' => 8000,
-                'stok' => 100,
-            ],
-            [
-                'id_cabang' => $lombok->id_cabang,
-                'nama_produk' => 'Sprite',
-                'deskripsi' => 'Minuman bersoda Sprite',
-                'harga' => 8000,
-                'stok' => 100,
-            ],
-            // Paket
-            [
-                'id_cabang' => $lombok->id_cabang,
-                'nama_produk' => 'Paket A',
-                'deskripsi' => 'Burger Sapi 1 + Kentang Goreng + Minuman',
-                'harga' => 40000,
-                'stok' => 25,
-            ],
-            [
-                'id_cabang' => $lombok->id_cabang,
-                'nama_produk' => 'Paket B',
-                'deskripsi' => 'Hotdog Sosis Ayam + Kentang Goreng + Minuman',
-                'harga' => 35000,
-                'stok' => 30,
-            ],
-            [
-                'id_cabang' => $lombok->id_cabang,
-                'nama_produk' => 'Paket C',
-                'deskripsi' => 'Burger Sapi 2 + Kentang Goreng + Minuman',
-                'harga' => 50000,
-                'stok' => 20,
-            ],
-        ];
-
-        // Gunakan updateOrCreate untuk menghindari duplikat
-        foreach ($produkAmbon as $produk) {
+        foreach ($data as $item) {
             Produk::updateOrCreate(
-                [
-                    'id_cabang' => $produk['id_cabang'],
-                    'nama_produk' => $produk['nama_produk'],
-                ],
-                [
-                    'deskripsi' => $produk['deskripsi'],
-                    'harga' => $produk['harga'],
-                    'stok' => $produk['stok'],
-                ]
+                ['id' => $item['id']],
+                $item
             );
         }
 
-        foreach ($produkLombok as $produk) {
-            Produk::updateOrCreate(
-                [
-                    'id_cabang' => $produk['id_cabang'],
-                    'nama_produk' => $produk['nama_produk'],
-                ],
-                [
-                    'deskripsi' => $produk['deskripsi'],
-                    'harga' => $produk['harga'],
-                    'stok' => $produk['stok'],
-                ]
-            );
-        }
+        $this->command->info('Produk berhasil di-seed!');
     }
 }

@@ -4,240 +4,381 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Resep;
-use App\Models\ResepItem;
-use App\Models\Produk;
-use App\Models\BahanBaku;
-use App\Models\Cabang;
 
 class ResepSeeder extends Seeder
 {
     public function run(): void
     {
-        $ambon = Cabang::where('nama_cabang', 'Ambon')->first();
-        $lombok = Cabang::where('nama_cabang', 'Lombok')->first();
+        $data = [
+            [
+                'id' => 2,
+                'id_cabang' => 1,
+                'nama_resep' => 'Resep Burger Sapi 1',
+                'produk_id' => 37,
+                'deskripsi' => 'Resep untuk membuat Burger Sapi 1',
+                'created_at' => '2025-11-18 11:25:21',
+                'updated_at' => '2025-11-18 11:25:21',
+            ],
+            [
+                'id' => 3,
+                'id_cabang' => 1,
+                'nama_resep' => 'Resep Burger Sapi 2',
+                'produk_id' => 38,
+                'deskripsi' => 'Resep untuk membuat Burger Sapi 2',
+                'created_at' => '2025-11-18 11:25:21',
+                'updated_at' => '2025-11-18 11:25:21',
+            ],
+            [
+                'id' => 4,
+                'id_cabang' => 1,
+                'nama_resep' => 'Resep Hotdog Sosis Ayam',
+                'produk_id' => 35,
+                'deskripsi' => 'Resep untuk membuat Hotdog Sosis ayam',
+                'created_at' => '2025-11-18 11:25:21',
+                'updated_at' => '2025-11-18 11:25:21',
+            ],
+            [
+                'id' => 5,
+                'id_cabang' => 1,
+                'nama_resep' => 'Resep Hotdog Sosis Sapi',
+                'produk_id' => 36,
+                'deskripsi' => 'Resep untuk membuat Hotdog Sosis Sapi',
+                'created_at' => '2025-11-18 11:25:21',
+                'updated_at' => '2025-11-18 11:25:21',
+            ],
+            [
+                'id' => 6,
+                'id_cabang' => 1,
+                'nama_resep' => 'Resep Kentang Goreng',
+                'produk_id' => 39,
+                'deskripsi' => 'Resep untuk membuat Kentang Goreng',
+                'created_at' => '2025-11-18 11:25:21',
+                'updated_at' => '2025-11-18 11:25:21',
+            ],
+            [
+                'id' => 7,
+                'id_cabang' => 1,
+                'nama_resep' => 'Resep Coca Cola',
+                'produk_id' => 40,
+                'deskripsi' => 'Resep untuk membuat Coca cola',
+                'created_at' => '2025-11-18 11:25:21',
+                'updated_at' => '2025-11-18 11:25:21',
+            ],
+            [
+                'id' => 8,
+                'id_cabang' => 1,
+                'nama_resep' => 'Resep Sprite',
+                'produk_id' => 41,
+                'deskripsi' => 'Resep untuk membuat Sprite',
+                'created_at' => '2025-11-18 11:25:21',
+                'updated_at' => '2025-11-18 11:25:21',
+            ],
+            [
+                'id' => 9,
+                'id_cabang' => 1,
+                'nama_resep' => 'Resep Paket A',
+                'produk_id' => 49,
+                'deskripsi' => 'Resep untuk membuat Paket A',
+                'created_at' => '2025-11-18 11:25:21',
+                'updated_at' => '2025-11-18 11:25:21',
+            ],
+            [
+                'id' => 10,
+                'id_cabang' => 1,
+                'nama_resep' => 'Resep Paket B',
+                'produk_id' => 50,
+                'deskripsi' => 'Resep untuk membuat Paket B',
+                'created_at' => '2025-11-18 11:25:21',
+                'updated_at' => '2025-11-18 11:25:21',
+            ],
+            [
+                'id' => 11,
+                'id_cabang' => 1,
+                'nama_resep' => 'Resep Paket C',
+                'produk_id' => 51,
+                'deskripsi' => 'Resep untuk membuat Paket C',
+                'created_at' => '2025-11-18 11:25:21',
+                'updated_at' => '2025-11-18 11:25:21',
+            ],
+            [
+                'id' => 12,
+                'id_cabang' => 2,
+                'nama_resep' => 'Resep Burger Sapi 1',
+                'produk_id' => 52,
+                'deskripsi' => 'Resep untuk membuat Burger Sapi 1',
+                'created_at' => '2025-11-18 11:25:21',
+                'updated_at' => '2025-11-18 11:25:21',
+            ],
+            [
+                'id' => 13,
+                'id_cabang' => 2,
+                'nama_resep' => 'Resep Burger Sapi 2',
+                'produk_id' => 53,
+                'deskripsi' => 'Resep untuk membuat Burger Sapi 2',
+                'created_at' => '2025-11-18 11:25:21',
+                'updated_at' => '2025-11-18 11:25:21',
+            ],
+            [
+                'id' => 14,
+                'id_cabang' => 2,
+                'nama_resep' => 'Resep Hotdog Sosis Ayam',
+                'produk_id' => 54,
+                'deskripsi' => 'Resep untuk membuat Hotdog Sosis Ayam',
+                'created_at' => '2025-11-18 11:25:22',
+                'updated_at' => '2025-11-18 11:25:22',
+            ],
+            [
+                'id' => 15,
+                'id_cabang' => 2,
+                'nama_resep' => 'Resep Hotdog Sosis Sapi',
+                'produk_id' => 55,
+                'deskripsi' => 'Resep untuk membuat Hotdog Sosis Sapi',
+                'created_at' => '2025-11-18 11:25:22',
+                'updated_at' => '2025-11-18 11:25:22',
+            ],
+            [
+                'id' => 16,
+                'id_cabang' => 2,
+                'nama_resep' => 'Resep Kentang Goreng',
+                'produk_id' => 56,
+                'deskripsi' => 'Resep untuk membuat Kentang Goreng',
+                'created_at' => '2025-11-18 11:25:22',
+                'updated_at' => '2025-11-18 11:25:22',
+            ],
+            [
+                'id' => 17,
+                'id_cabang' => 2,
+                'nama_resep' => 'Resep Coca Cola',
+                'produk_id' => 57,
+                'deskripsi' => 'Resep untuk membuat Coca Cola',
+                'created_at' => '2025-11-18 11:25:22',
+                'updated_at' => '2025-11-18 11:25:22',
+            ],
+            [
+                'id' => 18,
+                'id_cabang' => 2,
+                'nama_resep' => 'Resep Sprite',
+                'produk_id' => 58,
+                'deskripsi' => 'Resep untuk membuat Sprite',
+                'created_at' => '2025-11-18 11:25:22',
+                'updated_at' => '2025-11-18 11:25:22',
+            ],
+            [
+                'id' => 19,
+                'id_cabang' => 2,
+                'nama_resep' => 'Resep Paket A',
+                'produk_id' => 59,
+                'deskripsi' => 'Resep untuk membuat Paket A',
+                'created_at' => '2025-11-18 11:25:22',
+                'updated_at' => '2025-11-18 11:25:22',
+            ],
+            [
+                'id' => 20,
+                'id_cabang' => 2,
+                'nama_resep' => 'Resep Paket B',
+                'produk_id' => 60,
+                'deskripsi' => 'Resep untuk membuat Paket B',
+                'created_at' => '2025-11-18 11:25:22',
+                'updated_at' => '2025-11-18 11:25:22',
+            ],
+            [
+                'id' => 21,
+                'id_cabang' => 2,
+                'nama_resep' => 'Resep Paket C',
+                'produk_id' => 61,
+                'deskripsi' => 'Resep untuk membuat Paket C',
+                'created_at' => '2025-11-18 11:25:22',
+                'updated_at' => '2025-11-18 11:25:22',
+            ],
+            [
+                'id' => 22,
+                'id_cabang' => 1,
+                'nama_resep' => 'Resep Burger Sapi 1',
+                'produk_id' => 37,
+                'deskripsi' => 'Resep untuk membuat Burger Sapi 1',
+                'created_at' => '2025-11-18 11:25:29',
+                'updated_at' => '2025-11-18 11:25:29',
+            ],
+            [
+                'id' => 23,
+                'id_cabang' => 1,
+                'nama_resep' => 'Resep Burger Sapi 2',
+                'produk_id' => 38,
+                'deskripsi' => 'Resep untuk membuat Burger Sapi 2',
+                'created_at' => '2025-11-18 11:25:29',
+                'updated_at' => '2025-11-18 11:25:29',
+            ],
+            [
+                'id' => 24,
+                'id_cabang' => 1,
+                'nama_resep' => 'Resep Hotdog Sosis Ayam',
+                'produk_id' => 35,
+                'deskripsi' => 'Resep untuk membuat Hotdog Sosis ayam',
+                'created_at' => '2025-11-18 11:25:29',
+                'updated_at' => '2025-11-18 11:25:29',
+            ],
+            [
+                'id' => 25,
+                'id_cabang' => 1,
+                'nama_resep' => 'Resep Hotdog Sosis Sapi',
+                'produk_id' => 36,
+                'deskripsi' => 'Resep untuk membuat Hotdog Sosis Sapi',
+                'created_at' => '2025-11-18 11:25:29',
+                'updated_at' => '2025-11-18 11:25:29',
+            ],
+            [
+                'id' => 26,
+                'id_cabang' => 1,
+                'nama_resep' => 'Resep Kentang Goreng',
+                'produk_id' => 39,
+                'deskripsi' => 'Resep untuk membuat Kentang Goreng',
+                'created_at' => '2025-11-18 11:25:29',
+                'updated_at' => '2025-11-18 11:25:29',
+            ],
+            [
+                'id' => 27,
+                'id_cabang' => 1,
+                'nama_resep' => 'Resep Coca Cola',
+                'produk_id' => 40,
+                'deskripsi' => 'Resep untuk membuat Coca cola',
+                'created_at' => '2025-11-18 11:25:29',
+                'updated_at' => '2025-11-18 11:25:29',
+            ],
+            [
+                'id' => 28,
+                'id_cabang' => 1,
+                'nama_resep' => 'Resep Sprite',
+                'produk_id' => 41,
+                'deskripsi' => 'Resep untuk membuat Sprite',
+                'created_at' => '2025-11-18 11:25:29',
+                'updated_at' => '2025-11-18 11:25:29',
+            ],
+            [
+                'id' => 29,
+                'id_cabang' => 1,
+                'nama_resep' => 'Resep Paket A',
+                'produk_id' => 49,
+                'deskripsi' => 'Resep untuk membuat Paket A',
+                'created_at' => '2025-11-18 11:25:29',
+                'updated_at' => '2025-11-18 11:25:29',
+            ],
+            [
+                'id' => 30,
+                'id_cabang' => 1,
+                'nama_resep' => 'Resep Paket B',
+                'produk_id' => 50,
+                'deskripsi' => 'Resep untuk membuat Paket B',
+                'created_at' => '2025-11-18 11:25:29',
+                'updated_at' => '2025-11-18 11:25:29',
+            ],
+            [
+                'id' => 31,
+                'id_cabang' => 1,
+                'nama_resep' => 'Resep Paket C',
+                'produk_id' => 51,
+                'deskripsi' => 'Resep untuk membuat Paket C',
+                'created_at' => '2025-11-18 11:25:29',
+                'updated_at' => '2025-11-18 11:25:29',
+            ],
+            [
+                'id' => 32,
+                'id_cabang' => 2,
+                'nama_resep' => 'Resep Burger Sapi 1',
+                'produk_id' => 52,
+                'deskripsi' => 'Resep untuk membuat Burger Sapi 1',
+                'created_at' => '2025-11-18 11:25:29',
+                'updated_at' => '2025-11-18 11:25:29',
+            ],
+            [
+                'id' => 33,
+                'id_cabang' => 2,
+                'nama_resep' => 'Resep Burger Sapi 2',
+                'produk_id' => 53,
+                'deskripsi' => 'Resep untuk membuat Burger Sapi 2',
+                'created_at' => '2025-11-18 11:25:29',
+                'updated_at' => '2025-11-18 11:25:29',
+            ],
+            [
+                'id' => 34,
+                'id_cabang' => 2,
+                'nama_resep' => 'Resep Hotdog Sosis Ayam',
+                'produk_id' => 54,
+                'deskripsi' => 'Resep untuk membuat Hotdog Sosis Ayam',
+                'created_at' => '2025-11-18 11:25:29',
+                'updated_at' => '2025-11-18 11:25:29',
+            ],
+            [
+                'id' => 35,
+                'id_cabang' => 2,
+                'nama_resep' => 'Resep Hotdog Sosis Sapi',
+                'produk_id' => 55,
+                'deskripsi' => 'Resep untuk membuat Hotdog Sosis Sapi',
+                'created_at' => '2025-11-18 11:25:29',
+                'updated_at' => '2025-11-18 11:25:29',
+            ],
+            [
+                'id' => 36,
+                'id_cabang' => 2,
+                'nama_resep' => 'Resep Kentang Goreng',
+                'produk_id' => 56,
+                'deskripsi' => 'Resep untuk membuat Kentang Goreng',
+                'created_at' => '2025-11-18 11:25:29',
+                'updated_at' => '2025-11-18 11:25:29',
+            ],
+            [
+                'id' => 37,
+                'id_cabang' => 2,
+                'nama_resep' => 'Resep Coca Cola',
+                'produk_id' => 57,
+                'deskripsi' => 'Resep untuk membuat Coca Cola',
+                'created_at' => '2025-11-18 11:25:29',
+                'updated_at' => '2025-11-18 11:25:29',
+            ],
+            [
+                'id' => 38,
+                'id_cabang' => 2,
+                'nama_resep' => 'Resep Sprite',
+                'produk_id' => 58,
+                'deskripsi' => 'Resep untuk membuat Sprite',
+                'created_at' => '2025-11-18 11:25:29',
+                'updated_at' => '2025-11-18 11:25:29',
+            ],
+            [
+                'id' => 39,
+                'id_cabang' => 2,
+                'nama_resep' => 'Resep Paket A',
+                'produk_id' => 59,
+                'deskripsi' => 'Resep untuk membuat Paket A',
+                'created_at' => '2025-11-18 11:25:29',
+                'updated_at' => '2025-11-18 11:25:29',
+            ],
+            [
+                'id' => 40,
+                'id_cabang' => 2,
+                'nama_resep' => 'Resep Paket B',
+                'produk_id' => 60,
+                'deskripsi' => 'Resep untuk membuat Paket B',
+                'created_at' => '2025-11-18 11:25:29',
+                'updated_at' => '2025-11-18 11:25:29',
+            ],
+            [
+                'id' => 41,
+                'id_cabang' => 2,
+                'nama_resep' => 'Resep Paket C',
+                'produk_id' => 61,
+                'deskripsi' => 'Resep untuk membuat Paket C',
+                'created_at' => '2025-11-18 11:25:29',
+                'updated_at' => '2025-11-18 11:25:29',
+            ],
+        ];
 
-        if (!$ambon || !$lombok) {
-            $this->command->error('Cabang Ambon atau Lombok tidak ditemukan.');
-            return;
+        foreach ($data as $item) {
+            Resep::updateOrCreate(
+                ['id' => $item['id']],
+                $item
+            );
         }
 
-        foreach ([$ambon, $lombok] as $cabang) {
-            $this->seedResepForCabang($cabang);
-        }
-
-        $this->command->info('Resep berhasil di-seed untuk semua cabang!');
-    }
-
-    private function seedResepForCabang($cabang)
-    {
-        // Helper function untuk mendapatkan bahan baku
-        $getBahan = function($namaBahan) use ($cabang) {
-            $bahan = BahanBaku::where('id_cabang', $cabang->id_cabang)
-                ->where('nama_bahan', $namaBahan)
-                ->first();
-            
-            if (!$bahan) {
-                $this->command->warn("Bahan baku '{$namaBahan}' tidak ditemukan di cabang {$cabang->nama_cabang}");
-            }
-            
-            return $bahan;
-        };
-
-        // Helper function untuk mendapatkan produk
-        $getProduk = function($namaProduk) use ($cabang) {
-            $produk = Produk::where('id_cabang', $cabang->id_cabang)
-                ->where('nama_produk', $namaProduk)
-                ->first();
-            
-            if (!$produk) {
-                $this->command->warn("Produk '{$namaProduk}' tidak ditemukan di cabang {$cabang->nama_cabang}");
-            }
-            
-            return $produk;
-        };
-
-        // Helper function untuk membuat resep dengan bahan baku
-        $createResep = function($namaResep, $produk, $bahanList) use ($cabang, $getBahan) {
-            if (!$produk) {
-                return;
-            }
-
-            $resep = Resep::create([
-                'id_cabang' => $cabang->id_cabang,
-                'nama_resep' => $namaResep,
-                'produk_id' => $produk->id,
-                'deskripsi' => "Resep untuk membuat {$produk->nama_produk}",
-            ]);
-
-            $items = [];
-            foreach ($bahanList as $bahan) {
-                $bahanBaku = $getBahan($bahan['nama']);
-                if ($bahanBaku) {
-                    $items[] = ['bahan_baku_id' => $bahanBaku->id, 'qty' => $bahan['qty']];
-                }
-            }
-            
-            if (!empty($items)) {
-                $resep->items()->createMany($items);
-            }
-        };
-
-        // Resep Burger Sapi 1
-        $createResep(
-            'Resep Burger Sapi 1',
-            $getProduk('Burger Sapi 1'),
-            [
-                ['nama' => 'Roti Burger', 'qty' => 2],
-                ['nama' => 'Daging Sapi', 'qty' => 150],
-                ['nama' => 'Keju Slice', 'qty' => 1],
-                ['nama' => 'Selada', 'qty' => 20],
-                ['nama' => 'Tomat', 'qty' => 30],
-                ['nama' => 'Bawang Bombay', 'qty' => 20],
-                ['nama' => 'Saus Mayonaise', 'qty' => 15],
-                ['nama' => 'Saus Tomat', 'qty' => 10],
-            ]
-        );
-
-        // Resep Burger Sapi 2 (Double)
-        $createResep(
-            'Resep Burger Sapi 2',
-            $getProduk('Burger Sapi 2'),
-            [
-                ['nama' => 'Roti Burger', 'qty' => 2],
-                ['nama' => 'Daging Sapi', 'qty' => 300], // Double daging
-                ['nama' => 'Keju Slice', 'qty' => 2], // Double keju
-                ['nama' => 'Selada', 'qty' => 30],
-                ['nama' => 'Tomat', 'qty' => 40],
-                ['nama' => 'Bawang Bombay', 'qty' => 30],
-                ['nama' => 'Saus Mayonaise', 'qty' => 20],
-                ['nama' => 'Saus Tomat', 'qty' => 15],
-            ]
-        );
-
-        // Resep Hotdog Sosis Ayam
-        $createResep(
-            'Resep Hotdog Sosis Ayam',
-            $getProduk('Hotdog Sosis Ayam'),
-            [
-                ['nama' => 'Roti Hotdog', 'qty' => 1],
-                ['nama' => 'Sosis Ayam', 'qty' => 1],
-                ['nama' => 'Saus Tomat', 'qty' => 20],
-                ['nama' => 'Saus Mayonaise', 'qty' => 15],
-                ['nama' => 'Bawang Bombay', 'qty' => 15],
-            ]
-        );
-
-        // Resep Hotdog Sosis Sapi
-        $createResep(
-            'Resep Hotdog Sosis Sapi',
-            $getProduk('Hotdog Sosis Sapi'),
-            [
-                ['nama' => 'Roti Hotdog', 'qty' => 1],
-                ['nama' => 'Sosis Sapi', 'qty' => 1],
-                ['nama' => 'Saus Tomat', 'qty' => 20],
-                ['nama' => 'Saus Mayonaise', 'qty' => 15],
-                ['nama' => 'Bawang Bombay', 'qty' => 15],
-            ]
-        );
-
-        // Resep Kentang Goreng
-        $createResep(
-            'Resep Kentang Goreng',
-            $getProduk('Kentang Goreng'),
-            [
-                ['nama' => 'Kentang', 'qty' => 200],
-                ['nama' => 'Minyak Goreng', 'qty' => 50],
-                ['nama' => 'Garam', 'qty' => 5],
-            ]
-        );
-
-        // Resep Coca Cola
-        $createResep(
-            'Resep Coca Cola',
-            $getProduk('Coca Cola'),
-            [
-                ['nama' => 'Coca Cola', 'qty' => 350],
-                ['nama' => 'Es Batu', 'qty' => 100],
-            ]
-        );
-
-        // Resep Sprite
-        $createResep(
-            'Resep Sprite',
-            $getProduk('Sprite'),
-            [
-                ['nama' => 'Sprite', 'qty' => 350],
-                ['nama' => 'Es Batu', 'qty' => 100],
-            ]
-        );
-
-        // Resep Paket A (Burger Sapi 1 + Kentang + Minuman)
-        $createResep(
-            'Resep Paket A',
-            $getProduk('Paket A'),
-            [
-                // Bahan untuk Burger Sapi 1
-                ['nama' => 'Roti Burger', 'qty' => 2],
-                ['nama' => 'Daging Sapi', 'qty' => 150],
-                ['nama' => 'Keju Slice', 'qty' => 1],
-                ['nama' => 'Selada', 'qty' => 20],
-                ['nama' => 'Tomat', 'qty' => 30],
-                ['nama' => 'Bawang Bombay', 'qty' => 20],
-                ['nama' => 'Saus Mayonaise', 'qty' => 15],
-                ['nama' => 'Saus Tomat', 'qty' => 10],
-                // Bahan untuk Kentang Goreng
-                ['nama' => 'Kentang', 'qty' => 200],
-                ['nama' => 'Minyak Goreng', 'qty' => 50],
-                ['nama' => 'Garam', 'qty' => 5],
-                // Bahan untuk Minuman (Coca Cola)
-                ['nama' => 'Coca Cola', 'qty' => 350],
-                ['nama' => 'Es Batu', 'qty' => 100],
-            ]
-        );
-
-        // Resep Paket B (Hotdog Sosis Ayam + Kentang + Minuman)
-        $createResep(
-            'Resep Paket B',
-            $getProduk('Paket B'),
-            [
-                // Bahan untuk Hotdog
-                ['nama' => 'Roti Hotdog', 'qty' => 1],
-                ['nama' => 'Sosis Ayam', 'qty' => 1],
-                ['nama' => 'Saus Tomat', 'qty' => 20],
-                ['nama' => 'Saus Mayonaise', 'qty' => 15],
-                ['nama' => 'Bawang Bombay', 'qty' => 15],
-                // Bahan untuk Kentang Goreng
-                ['nama' => 'Kentang', 'qty' => 200],
-                ['nama' => 'Minyak Goreng', 'qty' => 50],
-                ['nama' => 'Garam', 'qty' => 5],
-                // Bahan untuk Minuman
-                ['nama' => 'Coca Cola', 'qty' => 350],
-                ['nama' => 'Es Batu', 'qty' => 100],
-            ]
-        );
-
-        // Resep Paket C (Burger Sapi 2 + Kentang + Minuman)
-        $createResep(
-            'Resep Paket C',
-            $getProduk('Paket C'),
-            [
-                // Bahan untuk Burger Sapi 2 (Double)
-                ['nama' => 'Roti Burger', 'qty' => 2],
-                ['nama' => 'Daging Sapi', 'qty' => 300],
-                ['nama' => 'Keju Slice', 'qty' => 2],
-                ['nama' => 'Selada', 'qty' => 30],
-                ['nama' => 'Tomat', 'qty' => 40],
-                ['nama' => 'Bawang Bombay', 'qty' => 30],
-                ['nama' => 'Saus Mayonaise', 'qty' => 20],
-                ['nama' => 'Saus Tomat', 'qty' => 15],
-                // Bahan untuk Kentang Goreng
-                ['nama' => 'Kentang', 'qty' => 200],
-                ['nama' => 'Minyak Goreng', 'qty' => 50],
-                ['nama' => 'Garam', 'qty' => 5],
-                // Bahan untuk Minuman
-                ['nama' => 'Coca Cola', 'qty' => 350],
-                ['nama' => 'Es Batu', 'qty' => 100],
-            ]
-        );
+        $this->command->info('Resep berhasil di-seed!');
     }
 }

@@ -4,81 +4,484 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\BahanBaku;
-use App\Models\Cabang;
 
 class BahanBakuSeeder extends Seeder
 {
     public function run(): void
     {
-        $ambon = Cabang::where('nama_cabang', 'Ambon')->first();
-        $lombok = Cabang::where('nama_cabang', 'Lombok')->first();
-
-        if (!$ambon || !$lombok) {
-            $this->command->error('Cabang Ambon atau Lombok tidak ditemukan. Pastikan CabangSeeder sudah dijalankan.');
-            return;
-        }
-
-        // Data bahan baku untuk makanan cepat saji (KFC/McDonald's style)
-        // Harga disesuaikan dengan harga pasar yang realistis (dalam Rupiah)
-        // Format satuan: "angka + satuan" (contoh: "1 pcs", "500 gram", "250 ml")
-        // Catatan: harga_satuan adalah harga per satuan yang ditulis (misalnya "500 gram" = harga untuk 500 gram)
-        $bahanBakuData = [
-            // Bahan untuk burger
-            ['nama_bahan' => 'Roti Burger', 'satuan' => '1 pcs', 'stok' => 100, 'harga_satuan' => 3500], // Rp 3.500 per roti
-            ['nama_bahan' => 'Daging Sapi', 'satuan' => '500 gram', 'stok' => 5000, 'harga_satuan' => 42500], // Rp 42.500 per 500 gram = Rp 85.000 per kg
-            ['nama_bahan' => 'Daging Ayam', 'satuan' => '500 gram', 'stok' => 5000, 'harga_satuan' => 20000], // Rp 20.000 per 500 gram = Rp 40.000 per kg
-            ['nama_bahan' => 'Keju Slice', 'satuan' => '1 pcs', 'stok' => 200, 'harga_satuan' => 3500], // Rp 3.500 per slice
-            ['nama_bahan' => 'Selada', 'satuan' => '250 gram', 'stok' => 2000, 'harga_satuan' => 5000], // Rp 5.000 per 250 gram = Rp 20.000 per kg
-            ['nama_bahan' => 'Tomat', 'satuan' => '250 gram', 'stok' => 2000, 'harga_satuan' => 5000], // Rp 5.000 per 250 gram = Rp 20.000 per kg
-            ['nama_bahan' => 'Bawang Bombay', 'satuan' => '250 gram', 'stok' => 1000, 'harga_satuan' => 7500], // Rp 7.500 per 250 gram = Rp 30.000 per kg
-            ['nama_bahan' => 'Saus Mayonaise', 'satuan' => '500 ml', 'stok' => 5000, 'harga_satuan' => 22000], // Rp 22.000 per 500 ml = Rp 44.000 per liter
-            ['nama_bahan' => 'Saus Tomat', 'satuan' => '500 ml', 'stok' => 5000, 'harga_satuan' => 16000], // Rp 16.000 per 500 ml = Rp 32.000 per liter
-            ['nama_bahan' => 'Saus Sambal', 'satuan' => '500 ml', 'stok' => 3000, 'harga_satuan' => 18000], // Rp 18.000 per 500 ml = Rp 36.000 per liter
-            
-            // Bahan untuk ayam goreng
-            ['nama_bahan' => 'Ayam Potong', 'satuan' => '1 pcs', 'stok' => 100, 'harga_satuan' => 22000], // Rp 22.000 per potong
-            ['nama_bahan' => 'Tepung Bumbu', 'satuan' => '1 kg', 'stok' => 10000, 'harga_satuan' => 22000], // Rp 22.000 per kg
-            ['nama_bahan' => 'Minyak Goreng', 'satuan' => '1 liter', 'stok' => 20000, 'harga_satuan' => 19000], // Rp 19.000 per liter
-            
-            // Bahan untuk kentang goreng
-            ['nama_bahan' => 'Kentang', 'satuan' => '1 kg', 'stok' => 10000, 'harga_satuan' => 25000], // Rp 25.000 per kg
-            ['nama_bahan' => 'Garam', 'satuan' => '500 gram', 'stok' => 5000, 'harga_satuan' => 3000], // Rp 3.000 per 500 gram = Rp 6.000 per kg
-            
-            // Bahan untuk hotdog
-            ['nama_bahan' => 'Roti Hotdog', 'satuan' => '1 pcs', 'stok' => 100, 'harga_satuan' => 3000], // Rp 3.000 per roti
-            ['nama_bahan' => 'Sosis Ayam', 'satuan' => '1 pcs', 'stok' => 150, 'harga_satuan' => 5500], // Rp 5.500 per sosis
-            ['nama_bahan' => 'Sosis Sapi', 'satuan' => '1 pcs', 'stok' => 150, 'harga_satuan' => 6500], // Rp 6.500 per sosis
-            
-            // Bahan untuk minuman
-            ['nama_bahan' => 'Coca Cola', 'satuan' => '1 liter', 'stok' => 50000, 'harga_satuan' => 15000], // Rp 15.000 per liter
-            ['nama_bahan' => 'Sprite', 'satuan' => '1 liter', 'stok' => 50000, 'harga_satuan' => 15000], // Rp 15.000 per liter
-            ['nama_bahan' => 'Es Batu', 'satuan' => '1 kg', 'stok' => 10000, 'harga_satuan' => 2000], // Rp 2.000 per kg
-            
-            // Bahan untuk nasi
-            ['nama_bahan' => 'Beras', 'satuan' => '1 kg', 'stok' => 20000, 'harga_satuan' => 13000], // Rp 13.000 per kg
-            
-            // Bahan tambahan
-            ['nama_bahan' => 'merica', 'satuan' => '1 gram', 'stok' => 1000, 'harga_satuan' => 50], // Rp 50 per gram = Rp 50.000 per kg
+        $data = [
+            [
+                'id' => 2,
+                'id_cabang' => 1,
+                'nama_bahan' => 'roti burger',
+                'satuan' => '1 pcs',
+                'stok' => 100,
+                'harga_satuan' => 3500.00,
+                'created_at' => '2025-11-04 03:44:34',
+                'updated_at' => '2025-12-14 12:45:29',
+            ],
+            [
+                'id' => 4,
+                'id_cabang' => 1,
+                'nama_bahan' => 'Daging Sapi',
+                'satuan' => '500 gram',
+                'stok' => 5000,
+                'harga_satuan' => 42500.00,
+                'created_at' => '2025-11-18 11:25:13',
+                'updated_at' => '2025-12-14 12:45:29',
+            ],
+            [
+                'id' => 5,
+                'id_cabang' => 1,
+                'nama_bahan' => 'Daging Ayam',
+                'satuan' => '500 gram',
+                'stok' => 5000,
+                'harga_satuan' => 20000.00,
+                'created_at' => '2025-11-18 11:25:13',
+                'updated_at' => '2025-12-14 12:45:29',
+            ],
+            [
+                'id' => 6,
+                'id_cabang' => 1,
+                'nama_bahan' => 'Keju Slice',
+                'satuan' => '1 pcs',
+                'stok' => 200,
+                'harga_satuan' => 3500.00,
+                'created_at' => '2025-11-18 11:25:13',
+                'updated_at' => '2025-12-14 12:45:29',
+            ],
+            [
+                'id' => 7,
+                'id_cabang' => 1,
+                'nama_bahan' => 'Selada',
+                'satuan' => '250 gram',
+                'stok' => 2000,
+                'harga_satuan' => 5000.00,
+                'created_at' => '2025-11-18 11:25:13',
+                'updated_at' => '2025-12-14 12:45:29',
+            ],
+            [
+                'id' => 8,
+                'id_cabang' => 1,
+                'nama_bahan' => 'Tomat',
+                'satuan' => '250 gram',
+                'stok' => 2000,
+                'harga_satuan' => 5000.00,
+                'created_at' => '2025-11-18 11:25:13',
+                'updated_at' => '2025-12-14 12:45:29',
+            ],
+            [
+                'id' => 9,
+                'id_cabang' => 1,
+                'nama_bahan' => 'Bawang Bombay',
+                'satuan' => '250 gram',
+                'stok' => 1000,
+                'harga_satuan' => 7500.00,
+                'created_at' => '2025-11-18 11:25:13',
+                'updated_at' => '2025-12-14 12:45:29',
+            ],
+            [
+                'id' => 10,
+                'id_cabang' => 1,
+                'nama_bahan' => 'Saus Mayonaise',
+                'satuan' => '500 ml',
+                'stok' => 5000,
+                'harga_satuan' => 22000.00,
+                'created_at' => '2025-11-18 11:25:13',
+                'updated_at' => '2025-12-14 12:45:29',
+            ],
+            [
+                'id' => 11,
+                'id_cabang' => 1,
+                'nama_bahan' => 'Saus Tomat',
+                'satuan' => '500 ml',
+                'stok' => 5000,
+                'harga_satuan' => 16000.00,
+                'created_at' => '2025-11-18 11:25:13',
+                'updated_at' => '2025-12-14 12:45:29',
+            ],
+            [
+                'id' => 12,
+                'id_cabang' => 1,
+                'nama_bahan' => 'Saus Sambal',
+                'satuan' => '500 ml',
+                'stok' => 3000,
+                'harga_satuan' => 18000.00,
+                'created_at' => '2025-11-18 11:25:13',
+                'updated_at' => '2025-12-14 12:45:29',
+            ],
+            [
+                'id' => 13,
+                'id_cabang' => 1,
+                'nama_bahan' => 'Ayam Potong',
+                'satuan' => '1 pcs',
+                'stok' => 100,
+                'harga_satuan' => 22000.00,
+                'created_at' => '2025-11-18 11:25:13',
+                'updated_at' => '2025-12-14 12:45:29',
+            ],
+            [
+                'id' => 14,
+                'id_cabang' => 1,
+                'nama_bahan' => 'Tepung Bumbu',
+                'satuan' => '1 kg',
+                'stok' => 10000,
+                'harga_satuan' => 22000.00,
+                'created_at' => '2025-11-18 11:25:13',
+                'updated_at' => '2025-12-14 12:45:29',
+            ],
+            [
+                'id' => 15,
+                'id_cabang' => 1,
+                'nama_bahan' => 'Minyak Goreng',
+                'satuan' => '1 liter',
+                'stok' => 20000,
+                'harga_satuan' => 19000.00,
+                'created_at' => '2025-11-18 11:25:13',
+                'updated_at' => '2025-12-14 12:45:29',
+            ],
+            [
+                'id' => 16,
+                'id_cabang' => 1,
+                'nama_bahan' => 'Kentang',
+                'satuan' => '1 kg',
+                'stok' => 10000,
+                'harga_satuan' => 25000.00,
+                'created_at' => '2025-11-18 11:25:13',
+                'updated_at' => '2025-12-14 12:45:29',
+            ],
+            [
+                'id' => 17,
+                'id_cabang' => 1,
+                'nama_bahan' => 'Garam',
+                'satuan' => '500 gram',
+                'stok' => 5000,
+                'harga_satuan' => 3000.00,
+                'created_at' => '2025-11-18 11:25:13',
+                'updated_at' => '2025-12-14 12:45:29',
+            ],
+            [
+                'id' => 18,
+                'id_cabang' => 1,
+                'nama_bahan' => 'Roti Hotdog',
+                'satuan' => '1 pcs',
+                'stok' => 100,
+                'harga_satuan' => 3000.00,
+                'created_at' => '2025-11-18 11:25:13',
+                'updated_at' => '2025-12-14 12:45:29',
+            ],
+            [
+                'id' => 19,
+                'id_cabang' => 1,
+                'nama_bahan' => 'Sosis Ayam',
+                'satuan' => '1 pcs',
+                'stok' => 150,
+                'harga_satuan' => 5500.00,
+                'created_at' => '2025-11-18 11:25:13',
+                'updated_at' => '2025-12-14 12:45:29',
+            ],
+            [
+                'id' => 20,
+                'id_cabang' => 1,
+                'nama_bahan' => 'Sosis Sapi',
+                'satuan' => '1 pcs',
+                'stok' => 150,
+                'harga_satuan' => 6500.00,
+                'created_at' => '2025-11-18 11:25:13',
+                'updated_at' => '2025-12-14 12:45:29',
+            ],
+            [
+                'id' => 21,
+                'id_cabang' => 1,
+                'nama_bahan' => 'Coca Cola',
+                'satuan' => '1 liter',
+                'stok' => 50000,
+                'harga_satuan' => 15000.00,
+                'created_at' => '2025-11-18 11:25:13',
+                'updated_at' => '2025-12-14 12:45:29',
+            ],
+            [
+                'id' => 22,
+                'id_cabang' => 1,
+                'nama_bahan' => 'Sprite',
+                'satuan' => '1 liter',
+                'stok' => 50000,
+                'harga_satuan' => 15000.00,
+                'created_at' => '2025-11-18 11:25:13',
+                'updated_at' => '2025-12-14 12:45:29',
+            ],
+            [
+                'id' => 23,
+                'id_cabang' => 1,
+                'nama_bahan' => 'Es Batu',
+                'satuan' => '1 kg',
+                'stok' => 10000,
+                'harga_satuan' => 2000.00,
+                'created_at' => '2025-11-18 11:25:13',
+                'updated_at' => '2025-12-14 12:45:29',
+            ],
+            [
+                'id' => 24,
+                'id_cabang' => 1,
+                'nama_bahan' => 'Beras',
+                'satuan' => '1 kg',
+                'stok' => 20000,
+                'harga_satuan' => 13000.00,
+                'created_at' => '2025-11-18 11:25:13',
+                'updated_at' => '2025-12-14 12:45:29',
+            ],
+            [
+                'id' => 25,
+                'id_cabang' => 2,
+                'nama_bahan' => 'Roti Burger',
+                'satuan' => '1 pcs',
+                'stok' => 100,
+                'harga_satuan' => 3500.00,
+                'created_at' => '2025-11-18 11:25:13',
+                'updated_at' => '2025-12-14 12:45:29',
+            ],
+            [
+                'id' => 26,
+                'id_cabang' => 2,
+                'nama_bahan' => 'Daging Sapi',
+                'satuan' => '500 gram',
+                'stok' => 5000,
+                'harga_satuan' => 42500.00,
+                'created_at' => '2025-11-18 11:25:13',
+                'updated_at' => '2025-12-14 12:45:29',
+            ],
+            [
+                'id' => 27,
+                'id_cabang' => 2,
+                'nama_bahan' => 'Daging Ayam',
+                'satuan' => '500 gram',
+                'stok' => 5000,
+                'harga_satuan' => 20000.00,
+                'created_at' => '2025-11-18 11:25:13',
+                'updated_at' => '2025-11-27 18:53:26',
+            ],
+            [
+                'id' => 28,
+                'id_cabang' => 2,
+                'nama_bahan' => 'Keju Slice',
+                'satuan' => '1 pcs',
+                'stok' => 200,
+                'harga_satuan' => 3500.00,
+                'created_at' => '2025-11-18 11:25:13',
+                'updated_at' => '2025-12-14 12:45:29',
+            ],
+            [
+                'id' => 29,
+                'id_cabang' => 2,
+                'nama_bahan' => 'Selada',
+                'satuan' => '250 gram',
+                'stok' => 2000,
+                'harga_satuan' => 5000.00,
+                'created_at' => '2025-11-18 11:25:13',
+                'updated_at' => '2025-12-14 12:45:29',
+            ],
+            [
+                'id' => 30,
+                'id_cabang' => 2,
+                'nama_bahan' => 'Tomat',
+                'satuan' => '250 gram',
+                'stok' => 2000,
+                'harga_satuan' => 5000.00,
+                'created_at' => '2025-11-18 11:25:13',
+                'updated_at' => '2025-11-27 18:53:26',
+            ],
+            [
+                'id' => 31,
+                'id_cabang' => 2,
+                'nama_bahan' => 'Bawang Bombay',
+                'satuan' => '250 gram',
+                'stok' => 1000,
+                'harga_satuan' => 7500.00,
+                'created_at' => '2025-11-18 11:25:13',
+                'updated_at' => '2025-11-27 18:53:26',
+            ],
+            [
+                'id' => 32,
+                'id_cabang' => 2,
+                'nama_bahan' => 'Saus Mayonaise',
+                'satuan' => '500 ml',
+                'stok' => 5000,
+                'harga_satuan' => 22000.00,
+                'created_at' => '2025-11-18 11:25:13',
+                'updated_at' => '2025-12-14 12:45:29',
+            ],
+            [
+                'id' => 33,
+                'id_cabang' => 2,
+                'nama_bahan' => 'Saus Tomat',
+                'satuan' => '500 ml',
+                'stok' => 5000,
+                'harga_satuan' => 16000.00,
+                'created_at' => '2025-11-18 11:25:13',
+                'updated_at' => '2025-12-14 12:45:29',
+            ],
+            [
+                'id' => 34,
+                'id_cabang' => 2,
+                'nama_bahan' => 'Saus Sambal',
+                'satuan' => '500 ml',
+                'stok' => 3000,
+                'harga_satuan' => 18000.00,
+                'created_at' => '2025-11-18 11:25:13',
+                'updated_at' => '2025-12-14 12:45:29',
+            ],
+            [
+                'id' => 35,
+                'id_cabang' => 2,
+                'nama_bahan' => 'Ayam Potong',
+                'satuan' => '1 pcs',
+                'stok' => 100,
+                'harga_satuan' => 22000.00,
+                'created_at' => '2025-11-18 11:25:13',
+                'updated_at' => '2025-12-14 12:45:29',
+            ],
+            [
+                'id' => 36,
+                'id_cabang' => 2,
+                'nama_bahan' => 'Tepung Bumbu',
+                'satuan' => '1 kg',
+                'stok' => 10000,
+                'harga_satuan' => 22000.00,
+                'created_at' => '2025-11-18 11:25:13',
+                'updated_at' => '2025-12-14 12:45:29',
+            ],
+            [
+                'id' => 37,
+                'id_cabang' => 2,
+                'nama_bahan' => 'Minyak Goreng',
+                'satuan' => '1 liter',
+                'stok' => 20000,
+                'harga_satuan' => 19000.00,
+                'created_at' => '2025-11-18 11:25:13',
+                'updated_at' => '2025-12-14 12:45:29',
+            ],
+            [
+                'id' => 38,
+                'id_cabang' => 2,
+                'nama_bahan' => 'Kentang',
+                'satuan' => '1 kg',
+                'stok' => 10000,
+                'harga_satuan' => 25000.00,
+                'created_at' => '2025-11-18 11:25:13',
+                'updated_at' => '2025-11-27 18:53:26',
+            ],
+            [
+                'id' => 39,
+                'id_cabang' => 2,
+                'nama_bahan' => 'Garam',
+                'satuan' => '500 gram',
+                'stok' => 5000,
+                'harga_satuan' => 3000.00,
+                'created_at' => '2025-11-18 11:25:13',
+                'updated_at' => '2025-12-14 12:45:29',
+            ],
+            [
+                'id' => 40,
+                'id_cabang' => 2,
+                'nama_bahan' => 'Roti Hotdog',
+                'satuan' => '1 pcs',
+                'stok' => 100,
+                'harga_satuan' => 3000.00,
+                'created_at' => '2025-11-18 11:25:13',
+                'updated_at' => '2025-12-14 12:45:29',
+            ],
+            [
+                'id' => 41,
+                'id_cabang' => 2,
+                'nama_bahan' => 'Sosis Ayam',
+                'satuan' => '1 pcs',
+                'stok' => 150,
+                'harga_satuan' => 5500.00,
+                'created_at' => '2025-11-18 11:25:13',
+                'updated_at' => '2025-12-14 12:45:29',
+            ],
+            [
+                'id' => 42,
+                'id_cabang' => 2,
+                'nama_bahan' => 'Sosis Sapi',
+                'satuan' => '1 pcs',
+                'stok' => 150,
+                'harga_satuan' => 6500.00,
+                'created_at' => '2025-11-18 11:25:13',
+                'updated_at' => '2025-12-14 12:45:29',
+            ],
+            [
+                'id' => 43,
+                'id_cabang' => 2,
+                'nama_bahan' => 'Coca Cola',
+                'satuan' => '1 liter',
+                'stok' => 50000,
+                'harga_satuan' => 15000.00,
+                'created_at' => '2025-11-18 11:25:13',
+                'updated_at' => '2025-11-27 18:53:26',
+            ],
+            [
+                'id' => 44,
+                'id_cabang' => 2,
+                'nama_bahan' => 'Sprite',
+                'satuan' => '1 liter',
+                'stok' => 50000,
+                'harga_satuan' => 15000.00,
+                'created_at' => '2025-11-18 11:25:13',
+                'updated_at' => '2025-11-27 18:53:26',
+            ],
+            [
+                'id' => 45,
+                'id_cabang' => 2,
+                'nama_bahan' => 'Es Batu',
+                'satuan' => '1 kg',
+                'stok' => 10000,
+                'harga_satuan' => 2000.00,
+                'created_at' => '2025-11-18 11:25:13',
+                'updated_at' => '2025-11-27 18:53:26',
+            ],
+            [
+                'id' => 46,
+                'id_cabang' => 2,
+                'nama_bahan' => 'Beras',
+                'satuan' => '1 kg',
+                'stok' => 20000,
+                'harga_satuan' => 13000.00,
+                'created_at' => '2025-11-18 11:25:13',
+                'updated_at' => '2025-12-14 12:45:29',
+            ],
+            [
+                'id' => 92,
+                'id_cabang' => 1,
+                'nama_bahan' => 'merica',
+                'satuan' => '1 gram',
+                'stok' => 1000,
+                'harga_satuan' => 50.00,
+                'created_at' => '2025-12-14 12:24:54',
+                'updated_at' => '2025-12-14 12:24:54',
+            ],
+            [
+                'id' => 93,
+                'id_cabang' => 2,
+                'nama_bahan' => 'merica',
+                'satuan' => '1 gram',
+                'stok' => 1000,
+                'harga_satuan' => 50.00,
+                'created_at' => '2025-12-14 12:45:29',
+                'updated_at' => '2025-12-14 12:45:29',
+            ],
         ];
 
-        // Insert untuk setiap cabang (gunakan updateOrCreate untuk menghindari duplikat)
-        foreach ([$ambon, $lombok] as $cabang) {
-            foreach ($bahanBakuData as $bahan) {
-                BahanBaku::updateOrCreate(
-                    [
-                        'id_cabang' => $cabang->id_cabang,
-                        'nama_bahan' => $bahan['nama_bahan'],
-                    ],
-                    [
-                        'satuan' => $bahan['satuan'],
-                        'stok' => $bahan['stok'],
-                        'harga_satuan' => $bahan['harga_satuan'],
-                    ]
-                );
-            }
+        foreach ($data as $item) {
+            BahanBaku::updateOrCreate(
+                [
+                    'id_cabang' => $item['id_cabang'],
+                    'nama_bahan' => $item['nama_bahan'],
+                ],
+                $item
+            );
         }
 
-        $this->command->info('Bahan baku berhasil di-seed untuk semua cabang!');
+        $this->command->info('BahanBaku berhasil di-seed!');
     }
 }
-
