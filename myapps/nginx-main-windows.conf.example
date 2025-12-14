@@ -1,0 +1,43 @@
+# Contoh konfigurasi nginx.conf utama untuk Windows
+# Copy isi ini ke file nginx.conf utama Anda (biasanya di C:\nginx\conf\nginx.conf)
+
+user nobody;
+worker_processes auto;
+error_log logs/error.log;
+pid logs/nginx.pid;
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    include mime.types;
+    default_type application/octet-stream;
+
+    log_format main '$remote_addr - $remote_user [$time_local] "$request" '
+                    '$status $body_bytes_sent "$http_referer" '
+                    '"$http_user_agent" "$http_x_forwarded_for"';
+
+    access_log logs/access.log main;
+
+    sendfile on;
+    tcp_nopush on;
+    tcp_nodelay on;
+    keepalive_timeout 65;
+    types_hash_max_size 2048;
+
+    # Gzip Settings
+    gzip on;
+    gzip_vary on;
+    gzip_proxied any;
+    gzip_comp_level 6;
+    gzip_types text/plain text/css text/xml text/javascript application/json application/javascript application/xml+rss application/rss+xml;
+
+    # Include konfigurasi aplikasi Laravel
+    # Sesuaikan path dengan lokasi file nginx-windows.conf
+    include C:/Users/Keannn/Skripsi/myapps/nginx-windows.conf;
+    
+    # Atau jika file sudah di folder nginx:
+    # include nginx-windows.conf;
+}
+
