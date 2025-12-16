@@ -39,8 +39,6 @@ class SendLaporan6Bulanan extends Command
         $endDate = Carbon::now()->endOfDay();
         $startDate = Carbon::now()->subMonths(6)->startOfDay();
 
-        $this->info("📅 Periode laporan: {$startDate->locale('id')->format('d F Y')} - {$endDate->locale('id')->format('d F Y')}");
-        $this->newLine();
 
         // Ambil semua cabang
         $cabangs = Cabang::all();
@@ -64,32 +62,23 @@ class SendLaporan6Bulanan extends Command
 
             try {
                 // Generate data laporan untuk semua cabang
-                $this->info("   📊 Menggenerate data laporan...");
                 $laporanData = $this->generateLaporanData($cabangs, $startDate, $endDate);
-                $this->info("   ✅ Data laporan berhasil digenerate");
 
                 // Cek konfigurasi email sekali lagi sebelum kirim
                 $mailer = config('mail.default');
                 $username = config('mail.mailers.smtp.username');
                 
-                $this->info("   📧 Mailer yang digunakan: {$mailer}");
-                
                 if ($mailer === 'log') {
-                    $this->warn("   ⚠️  Peringatan: Mailer saat ini adalah 'log', email tidak akan benar-benar dikirim!");
-                    $this->warn("   💡 Gunakan 'smtp' untuk mengirim email sebenarnya.");
+                    $this->warn("   ⚠️  Mailer adalah 'log', email tidak akan dikirim!");
                 }
                 
                 // Validasi username bukan placeholder
                 if ($username === 'your-email@gmail.com' || strpos($username, 'your-email') !== false) {
-                    $this->error("   ❌ Username masih menggunakan placeholder: {$username}");
-                    $this->error("   Update file .env dengan email yang benar!");
                     throw new \Exception("Konfigurasi email masih menggunakan placeholder. Update file .env terlebih dahulu.");
                 }
 
                 // Kirim email
                 $this->info("   📤 Mengirim email...");
-                $this->line("      Subject: Laporan 6 Bulanan - {$startDate->locale('id')->format('d F Y')} - {$endDate->locale('id')->format('d F Y')}");
-                $this->line("      From: " . config('mail.from.address'));
                 
                 // Log sebelum kirim
                 \Log::info("Mengirim email laporan ke: {$owner->email}", [
@@ -103,8 +92,6 @@ class SendLaporan6Bulanan extends Command
                 \Log::info("Email laporan berhasil dikirim ke: {$owner->email}");
 
                 $this->info("✅ Laporan berhasil dikirim ke {$owner->email}");
-                $this->info("   💡 Cek inbox, folder Spam/Junk, dan All Mail");
-                $this->info("   📝 Log tersimpan di: storage/logs/laravel.log");
                 $successCount++;
             } catch (\Exception $e) {
                 $this->error("❌ Gagal mengirim laporan ke {$owner->email}");
@@ -130,19 +117,7 @@ class SendLaporan6Bulanan extends Command
         $this->info("   ✅ Berhasil: {$successCount}");
         $this->info("   ❌ Gagal: {$errorCount}");
 
-        if ($successCount > 0) {
-            $this->newLine();
-            $this->info("💡 Tips Verifikasi Email:");
-            $this->line("   1. ✅ Cek inbox email Anda");
-            $this->line("   2. ✅ Cek folder Spam/Junk (sangat penting!)");
-            $this->line("   3. ✅ Cek folder All Mail di Gmail");
-            $this->line("   4. ⏰ Email mungkin membutuhkan 1-5 menit untuk sampai");
-            $this->line("   5. 📝 Cek log: storage/logs/laravel.log");
-            $this->line("   6. 🔍 Subject email: 'Laporan 6 Bulanan - [tanggal]'");
-            $this->newLine();
-            $this->info("📋 Untuk verifikasi lebih lanjut:");
-            $this->line("   php artisan email:check-status");
-        }
+        // Tips verifikasi email dihilangkan untuk output yang lebih bersih saat testing
 
         // Mode verify
         if ($this->option('verify')) {
@@ -203,13 +178,6 @@ class SendLaporan6Bulanan extends Command
         $username = config('mail.mailers.smtp.username');
         $password = config('mail.mailers.smtp.password');
         $fromAddress = config('mail.from.address');
-
-        $this->info("🔍 Konfigurasi Email:");
-        $this->line("   Mailer: {$mailer}");
-        $this->line("   Host: " . ($host ?: 'tidak dikonfigurasi'));
-        $this->line("   Username: " . ($username ?: 'tidak dikonfigurasi'));
-        $this->line("   Password: " . ($password ? '***' : 'tidak dikonfigurasi'));
-        $this->line("   From Address: " . ($fromAddress ?: 'tidak dikonfigurasi'));
 
         $hasError = false;
 

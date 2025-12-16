@@ -137,33 +137,22 @@ class SetupEmail extends Command
         }
         
         $this->info('✅ Konfigurasi email berhasil disimpan!');
-        $this->info("📧 Email: {$email}");
         
         if (!$usernameFound || !$passwordFound) {
             $this->warn('⚠️  Peringatan: Mungkin ada masalah dengan penyimpanan konfigurasi.');
-            $this->warn('   Silakan cek file .env secara manual.');
         }
-        
-        $this->newLine();
         
         // Clear config cache
         $this->call('config:clear');
         $this->call('cache:clear');
         
         // Verifikasi config setelah clear cache
-        $this->info('🔍 Memverifikasi konfigurasi...');
         $configUsername = config('mail.mailers.smtp.username');
         $configPassword = config('mail.mailers.smtp.password');
         
-        if ($configUsername === $email && $configPassword === $password) {
-            $this->info('✅ Konfigurasi sudah benar dan siap digunakan!');
-        } else {
-            $this->warn('⚠️  Konfigurasi yang terbaca:');
-            $this->warn('   MAIL_USERNAME: ' . ($configUsername ?: 'tidak ditemukan'));
-            $this->warn('   MAIL_PASSWORD: ' . ($configPassword ? '***' : 'tidak ditemukan'));
-            $this->warn('   Pastikan file .env sudah benar dan tidak ada placeholder.');
+        if ($configUsername !== $email || $configPassword !== $password) {
+            $this->warn('⚠️  Konfigurasi mungkin belum benar. Cek file .env secara manual.');
         }
-        $this->newLine();
         
         // Test koneksi jika diminta
         if ($this->option('test')) {
@@ -176,8 +165,7 @@ class SetupEmail extends Command
                             ->subject('Test Email - Laravel');
                 });
                 
-                $this->info('✅ Test email berhasil dikirim!');
-                $this->info("   Cek inbox: {$email}");
+                $this->info('✅ Test email berhasil dikirim ke ' . $email . '!');
             } catch (\Exception $e) {
                 $this->error('❌ Gagal mengirim test email!');
                 $errorMessage = $e->getMessage();
@@ -212,14 +200,6 @@ class SetupEmail extends Command
                 }
                 return 1;
             }
-        } else {
-            $this->info('Selanjutnya, jalankan:');
-            $this->line('  php artisan config:clear');
-            $this->line('  php artisan cache:clear');
-            $this->line('  php artisan laporan:send-6bulanan');
-            $this->newLine();
-            $this->comment('💡 Tips: Tambahkan --test untuk test koneksi email:');
-            $this->line('  php artisan email:setup ' . $email . ' "password" --test');
         }
         
         return 0;

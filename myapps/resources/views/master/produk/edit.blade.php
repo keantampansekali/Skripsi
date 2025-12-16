@@ -48,12 +48,14 @@
 
         <div>
             <label class="block text-sm mb-1">Cabang</label>
-            <select name="id_cabang" class="w-full px-3 py-2 border rounded dark:bg-gray-900 dark:border-gray-700">
+            <select name="id_cabang" disabled class="w-full px-3 py-2 border rounded dark:bg-gray-900 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 cursor-not-allowed">
                 <option value="">Gunakan cabang aktif ({{ session('nama_cabang') }})</option>
                 @foreach($cabang as $c)
                     <option value="{{ $c->id_cabang }}" @selected(old('id_cabang', $produk->id_cabang) == $c->id_cabang)>{{ $c->nama_cabang }}</option>
                 @endforeach
             </select>
+            <input type="hidden" name="id_cabang" value="{{ $produk->id_cabang }}">
+            <p class="text-xs text-gray-500 mt-1">Cabang tidak dapat diubah setelah produk dibuat.</p>
             @error('id_cabang')<div class="text-red-600 text-xs mt-1">{{ $message }}</div>@enderror
         </div>
 

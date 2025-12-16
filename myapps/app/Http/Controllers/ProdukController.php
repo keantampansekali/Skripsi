@@ -124,7 +124,6 @@ class ProdukController extends Controller
             'deskripsi' => ['nullable', 'string'],
             'harga' => ['required', 'numeric', 'min:0'],
             'stok' => ['required', 'integer', 'min:0'],
-            'id_cabang' => ['nullable', 'integer', 'exists:tabel_cabang,id_cabang'],
         ];
         
         // Validasi foto hanya jika ada file yang diupload
@@ -136,9 +135,8 @@ class ProdukController extends Controller
         
         $validated = $request->validate($rules);
 
-        if (!isset($validated['id_cabang'])) {
-            $validated['id_cabang'] = (int) (session('id_cabang'));
-        }
+        // Cabang tidak dapat diubah saat edit, gunakan nilai yang sudah ada
+        $validated['id_cabang'] = $produk->id_cabang;
 
         DB::transaction(function () use ($produk, $validated, $request) {
             if ($request->hasFile('foto')) {

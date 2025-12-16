@@ -141,25 +141,7 @@ class TestEmailLaporan extends Command
             \Log::info("Email laporan berhasil dikirim ke: {$email}");
 
             $this->newLine();
-            $this->info("✅ Email test berhasil dikirim!");
-            $this->newLine();
-            $this->info("📋 Informasi Email:");
-            $this->line("   To: {$email}");
-            $this->line("   From: " . config('mail.from.address'));
-            $this->line("   Subject: Laporan 6 Bulanan - {$startDate->locale('id')->format('d F Y')} - {$endDate->locale('id')->format('d F Y')}");
-            $this->newLine();
-            $this->info("💡 Langkah selanjutnya:");
-            $this->line("   1. ✅ Cek inbox email: {$email}");
-            $this->line("   2. ✅ Cek folder Spam/Junk (sangat penting!)");
-            $this->line("   3. ✅ Cek folder All Mail di Gmail");
-            $this->line("   4. ⏰ Email mungkin membutuhkan 1-5 menit untuk sampai");
-            $this->line("   5. 🔍 Cek log: storage/logs/laravel.log");
-            $this->newLine();
-            $this->warn("⚠️  Jika email tidak masuk:");
-            $this->line("   - Pastikan MAIL_MAILER=smtp di .env (bukan 'log')");
-            $this->line("   - Untuk Gmail: gunakan App Password (bukan password biasa)");
-            $this->line("   - Cek apakah email masuk ke Spam/Junk");
-            $this->line("   - Cek log untuk error: tail -f storage/logs/laravel.log");
+            $this->info("✅ Email test berhasil dikirim ke {$email}!");
 
             return 0;
         } catch (\Exception $e) {
