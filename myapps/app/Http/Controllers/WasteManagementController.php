@@ -141,11 +141,6 @@ class WasteManagementController extends Controller
                                 'nama' => $bahanBaku->nama_bahan,
                                 'stok' => $bahanBaku->stok,
                             ]));
-                            
-                            // Broadcast stok rendah jika stok < 10
-                            if ($bahanBaku->stok < 10) {
-                                broadcast(new StokRendah($bahanBaku, 'bahan_baku', $stokLama, $bahanBaku->stok, $validated['id_cabang']));
-                            }
                         } catch (\Exception $e) {
                             \Log::warning('Failed to broadcast stock update: ' . $e->getMessage());
                         }
@@ -176,11 +171,6 @@ class WasteManagementController extends Controller
                                 'nama' => $produk->nama_produk,
                                 'stok' => $produk->stok,
                             ]));
-                            
-                            // Broadcast stok rendah jika stok < 10
-                            if ($produk->stok < 10) {
-                                broadcast(new StokRendah($produk, 'produk', $stokLama, $produk->stok, $validated['id_cabang']));
-                            }
                         } catch (\Exception $e) {
                             \Log::warning('Failed to broadcast stock update: ' . $e->getMessage());
                         }
