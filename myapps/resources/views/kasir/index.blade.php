@@ -231,9 +231,13 @@
                                     </div>
                                     @endif
                                     @if($maxProducible > 0)
-                                    <span class="stock-display text-xs bg-gradient-to-r from-green-600/90 to-green-700/90 text-white px-2.5 py-1 rounded-full font-bold shadow-lg backdrop-blur-sm" data-stock="{{ $maxProducible }}">
-                                        {{ $maxProducible }}
-                                    </span>
+                                        @php
+                                            $stokRendahThreshold = config('whatsapp.stok_rendah_threshold', 10);
+                                            $isStokRendah = $maxProducible < $stokRendahThreshold;
+                                        @endphp
+                                        <span class="stock-display text-xs {{ $isStokRendah ? 'bg-gradient-to-r from-yellow-600/90 to-yellow-700/90' : 'bg-gradient-to-r from-green-600/90 to-green-700/90' }} text-white px-2.5 py-1 rounded-full font-bold shadow-lg backdrop-blur-sm" data-stock="{{ $maxProducible }}" data-threshold="{{ $stokRendahThreshold }}">
+                                            {{ $maxProducible }}
+                                        </span>
                                     @else
                                     <span class="stock-display text-xs bg-gradient-to-r from-red-600/90 to-red-700/90 text-white px-2.5 py-1 rounded-full font-bold shadow-lg" data-stock="0">
                                         Tidak Tersedia
@@ -855,9 +859,16 @@ function saveTransaction(subtotal, discount, discountTypeParam, discountValue, t
                         
                         if (newStock > 0) {
                             stockElement.textContent = newStock;
-                            stockElement.className = 'stock-display text-xs bg-gradient-to-r from-green-600/90 to-green-700/90 text-white px-2.5 py-1 rounded-full font-bold shadow-lg backdrop-blur-sm';
-                            if (newStock < 10) {
+                            // Ambil threshold dari attribute atau default 10
+                            const threshold = parseInt(stockElement.getAttribute('data-threshold')) || 10;
+                            
+                            // Cek threshold dulu, baru set warna
+                            if (newStock < threshold) {
+                                // Stok rendah: kuning
                                 stockElement.className = 'stock-display text-xs bg-gradient-to-r from-yellow-600/90 to-yellow-700/90 text-white px-2.5 py-1 rounded-full font-bold shadow-lg backdrop-blur-sm';
+                            } else {
+                                // Stok cukup: hijau
+                                stockElement.className = 'stock-display text-xs bg-gradient-to-r from-green-600/90 to-green-700/90 text-white px-2.5 py-1 rounded-full font-bold shadow-lg backdrop-blur-sm';
                             }
                         } else {
                             stockElement.textContent = 'Habis';
