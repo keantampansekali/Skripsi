@@ -1,7 +1,7 @@
 @extends('layouts.dashboard')
 
 @section('title', 'Data Pegawai')
-@section('header', 'Data Pegawai - ' . session('nama_cabang', 'Tidak ada cabang'))
+@section('header', 'Data Pegawai')
 
 @section('content')
 @if(session('success'))
