@@ -98,17 +98,20 @@ function setupEventListeners(channel) {
     channel.listen('.stok.updated', (e) => {
         console.log('📦 Stock updated event received:', e);
         console.log('📦 Full event object:', JSON.stringify(e, null, 2));
+        console.log('📦 Event keys:', Object.keys(e));
         
         // Handle both event.data and direct properties
         const eventData = e.data || e;
         console.log('📦 Event data to process:', eventData);
+        console.log('📦 Event data type:', typeof eventData);
         
         if (eventData) {
             console.log('📦 Processing stock update for:', {
                 tipe: eventData.tipe,
                 id: eventData.id,
                 nama: eventData.nama || eventData.nama_produk,
-                stok: eventData.stok
+                stok: eventData.stok,
+                currentPage: window.location.pathname
             });
             
             updateStockDisplay(eventData);
@@ -219,10 +222,13 @@ function setupEventListeners(channel) {
         // Update stock in master produk page
         if (data.tipe === 'produk' && window.location.pathname.includes('/master/produk')) {
             console.log('🔍 Looking for produk row with id:', data.id);
+            console.log('🔍 Available rows:', document.querySelectorAll('tr[data-produk-id]').length);
+            
             const row = document.querySelector(`tr[data-produk-id="${data.id}"]`);
             console.log('🔍 Found row:', row);
             
             if (row) {
+                console.log('🔍 Row HTML:', row.outerHTML.substring(0, 200));
                 const stokCell = row.querySelector('[data-field="stok"]');
                 console.log('🔍 Found stok cell:', stokCell);
                 
@@ -238,31 +244,35 @@ function setupEventListeners(channel) {
                         stokCell.classList.remove('text-red-600', 'font-bold');
                     }
                     
-                    // Force visual update
+                    // Force visual update with animation
                     row.style.transition = 'background-color 0.3s';
-                    row.style.backgroundColor = 'rgba(59, 130, 246, 0.1)';
+                    row.style.backgroundColor = 'rgba(59, 130, 246, 0.2)';
                     setTimeout(() => {
                         row.style.backgroundColor = '';
                     }, 1000);
+                    
+                    // Flash effect
+                    stokCell.style.transition = 'all 0.3s';
+                    stokCell.style.transform = 'scale(1.1)';
+                    stokCell.style.fontWeight = 'bold';
+                    setTimeout(() => {
+                        stokCell.style.transform = 'scale(1)';
+                        setTimeout(() => {
+                            if (parseInt(data.stok) >= 10) {
+                                stokCell.style.fontWeight = '';
+                            }
+                        }, 300);
+                    }, 300);
                 } else {
                     console.warn('⚠️ Stok cell not found in row');
+                    console.log('⚠️ Row innerHTML:', row.innerHTML);
                 }
             } else {
                 console.warn('⚠️ Produk row not found for id:', data.id);
-                // Try alternative selector
-                const altRow = document.querySelector(`tr[data-stock-id="${data.id}"][data-stock-type="produk"]`);
-                if (altRow) {
-                    console.log('✅ Found row with alternative selector');
-                    const stokCell = altRow.querySelector('[data-field="stok"]');
-                    if (stokCell) {
-                        stokCell.textContent = data.stok;
-                        if (parseInt(data.stok) < 10) {
-                            stokCell.classList.add('text-red-600', 'font-bold');
-                        } else {
-                            stokCell.classList.remove('text-red-600', 'font-bold');
-                        }
-                    }
-                }
+                console.log('⚠️ All produk IDs on page:', 
+                    Array.from(document.querySelectorAll('tr[data-produk-id]'))
+                        .map(r => r.getAttribute('data-produk-id'))
+                );
             }
         }
         

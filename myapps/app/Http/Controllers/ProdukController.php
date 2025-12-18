@@ -79,26 +79,8 @@ class ProdukController extends Controller
                 $validated['foto'] = 'uploads/produk/' . $fileName;
             }
             
+            // Create produk - Observer will handle broadcasting automatically
             $produk = Produk::create($validated);
-            
-            // Broadcast produk created/updated
-            try {
-                broadcast(new ProdukUpdated($validated['id_cabang'], [
-                    'id' => $produk->id,
-                    'nama_produk' => $produk->nama_produk,
-                    'harga' => $produk->harga,
-                    'stok' => $produk->stok,
-                ]));
-                
-                broadcast(new StokUpdated($validated['id_cabang'], [
-                    'tipe' => 'produk',
-                    'id' => $produk->id,
-                    'nama' => $produk->nama_produk,
-                    'stok' => $produk->stok,
-                ]));
-            } catch (\Exception $e) {
-                \Log::warning('Failed to broadcast produk update: ' . $e->getMessage());
-            }
         });
 
         return redirect()->route('produk.index')->with('success', 'Produk berhasil dibuat');
@@ -182,39 +164,8 @@ class ProdukController extends Controller
                 unset($validated['foto']);
             }
             
+            // Update produk - Observer will handle broadcasting automatically
             $produk->update($validated);
-            
-            // Broadcast produk updated
-            try {
-                $idCabang = $validated['id_cabang'];
-                
-                \Log::info('Broadcasting ProdukUpdated for cabang: ' . $idCabang);
-                broadcast(new ProdukUpdated($idCabang, [
-                    'id' => $produk->id,
-                    'nama_produk' => $produk->nama_produk,
-                    'harga' => $produk->harga,
-                    'stok' => $produk->stok,
-                ]));
-                
-                \Log::info('Broadcasting StokUpdated for cabang: ' . $idCabang, [
-                    'tipe' => 'produk',
-                    'id' => $produk->id,
-                    'nama' => $produk->nama_produk,
-                    'stok' => $produk->stok,
-                ]);
-                broadcast(new StokUpdated($idCabang, [
-                    'tipe' => 'produk',
-                    'id' => $produk->id,
-                    'nama' => $produk->nama_produk,
-                    'stok' => $produk->stok,
-                ]));
-                
-                \Log::info('Broadcast completed successfully');
-            } catch (\Exception $e) {
-                \Log::error('Failed to broadcast produk update: ' . $e->getMessage(), [
-                    'trace' => $e->getTraceAsString()
-                ]);
-            }
         });
 
         return redirect()->route('produk.index')->with('success', 'Produk berhasil diperbarui');

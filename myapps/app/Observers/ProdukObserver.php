@@ -60,8 +60,17 @@ class ProdukObserver
      */
     public function created(Produk $produk): void
     {
-        // Jika produk baru dibuat dengan stok rendah, tidak perlu notifikasi
-        // karena mungkin memang sengaja dibuat dengan stok rendah
+        // Broadcast stok created untuk produk baru
+        try {
+            \App\Events\StokUpdated::dispatch($produk->id_cabang, [
+                'tipe' => 'produk',
+                'id' => $produk->id,
+                'nama' => $produk->nama_produk,
+                'stok' => $produk->stok,
+            ]);
+        } catch (\Exception $e) {
+            Log::warning('Failed to broadcast stock creation: ' . $e->getMessage());
+        }
     }
 }
 
