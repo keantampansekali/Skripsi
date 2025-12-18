@@ -17,6 +17,10 @@ class PenyesuaianStok extends Model
         'catatan',
     ];
 
+    protected $casts = [
+        'tanggal' => 'date',
+    ];
+
     public function items()
     {
         return $this->hasMany(PenyesuaianItem::class);

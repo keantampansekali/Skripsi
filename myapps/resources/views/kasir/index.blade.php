@@ -200,25 +200,25 @@
                     <div id="productsGrid" class="grid grid-cols-2 md:grid-cols-3 gap-4 max-h-[calc(100vh-300px)] overflow-y-auto px-1 scrollbar-modern">
                         @foreach($produks as $produk)
                         @php
-                            $maxProducible = $produk->max_producible_quantity ?? 0;
-                            $isDisabled = $maxProducible <= 0;
+                            $stokProduk = $produk->stok ?? 0;
+                            $isDisabled = $stokProduk <= 0;
                         @endphp
                         <button 
-                            onclick="addToCart({{ $produk->id }}, '{{ $produk->nama_produk }}', {{ $produk->harga }}, {{ $maxProducible }})"
+                            onclick="addToCart({{ $produk->id }}, '{{ $produk->nama_produk }}', {{ $produk->harga }}, {{ $stokProduk }})"
                             class="product-card-modern p-5 rounded-2xl text-left shadow-xl relative overflow-hidden group min-h-[200px] flex flex-col {{ $isDisabled ? 'opacity-50 cursor-not-allowed' : '' }}"
                             style="@if($produk->foto) background-image: url('{{ asset($produk->foto) }}'); background-size: cover; background-position: center; @else background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%); @endif"
                             data-name="{{ strtolower($produk->nama_produk) }}"
                             data-product-id="{{ $produk->id }}"
-                            data-max-producible="{{ $maxProducible }}"
+                            data-stok="{{ $stokProduk }}"
                             {{ $isDisabled ? 'disabled' : '' }}
                         >
                             <!-- Overlay untuk readability -->
                             <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/80 rounded-2xl {{ $isDisabled ? 'bg-red-900/40' : '' }}"></div>
                             
                             @if($isDisabled)
-                            <!-- Badge Bahan Baku Habis -->
+                            <!-- Badge Stok Habis -->
                             <div class="absolute top-2 left-2 z-20 bg-red-600/90 text-white text-xs px-2 py-1 rounded-lg font-bold shadow-lg backdrop-blur-sm">
-                                ⚠️ Bahan Habis
+                                ⚠️ Stok Habis
                             </div>
                             @endif
                             
@@ -230,13 +230,13 @@
                                         <span class="text-xl">🛍️</span>
                                     </div>
                                     @endif
-                                    @if($maxProducible > 0)
+                                    @if($stokProduk > 0)
                                         @php
                                             $stokRendahThreshold = config('whatsapp.stok_rendah_threshold', 10);
-                                            $isStokRendah = $maxProducible < $stokRendahThreshold;
+                                            $isStokRendah = $stokProduk < $stokRendahThreshold;
                                         @endphp
-                                        <span class="stock-display text-xs {{ $isStokRendah ? 'bg-gradient-to-r from-yellow-600/90 to-yellow-700/90' : 'bg-gradient-to-r from-green-600/90 to-green-700/90' }} text-white px-2.5 py-1 rounded-full font-bold shadow-lg backdrop-blur-sm" data-stock="{{ $maxProducible }}" data-threshold="{{ $stokRendahThreshold }}">
-                                            {{ $maxProducible }}
+                                        <span class="stock-display text-xs {{ $isStokRendah ? 'bg-gradient-to-r from-yellow-600/90 to-yellow-700/90' : 'bg-gradient-to-r from-green-600/90 to-green-700/90' }} text-white px-2.5 py-1 rounded-full font-bold shadow-lg backdrop-blur-sm" data-stock="{{ $stokProduk }}" data-threshold="{{ $stokRendahThreshold }}">
+                                            {{ $stokProduk }}
                                         </span>
                                     @else
                                     <span class="stock-display text-xs bg-gradient-to-r from-red-600/90 to-red-700/90 text-white px-2.5 py-1 rounded-full font-bold shadow-lg" data-stock="0">
@@ -249,7 +249,7 @@
                                     <h3 class="font-bold text-white mb-1 text-sm leading-tight group-hover:text-white drop-shadow-lg">{{ $produk->nama_produk }}</h3>
                                     <p class="text-xs text-white/80 mb-2 line-clamp-1 leading-relaxed drop-shadow">
                                         @if($isDisabled)
-                                        Bahan baku tidak tersedia
+                                        Stok tidak tersedia
                                         @else
                                         {{ $produk->deskripsi ?? 'Tersedia' }}
                                         @endif
@@ -486,7 +486,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function addToCart(id, name, price, stock) {
     if (stock <= 0) {
-        alert('❌ Produk tidak tersedia!\n\nBahan baku tidak mencukupi untuk membuat produk ini.\nSilakan hubungi admin untuk restock bahan baku.');
+        alert('❌ Produk tidak tersedia!\n\nStok produk habis.\nSilakan hubungi admin untuk restock produk.');
         return;
     }
 
@@ -494,7 +494,7 @@ function addToCart(id, name, price, stock) {
     
     if (existingItem) {
         if (existingItem.quantity >= stock) {
-            alert(`❌ Maksimal ${stock} unit!\n\nJumlah produk yang bisa dibuat terbatas oleh stok bahan baku yang tersedia.`);
+            alert(`❌ Maksimal ${stock} unit!\n\nStok produk tersedia: ${stock} unit.`);
             return;
         }
         existingItem.quantity++;

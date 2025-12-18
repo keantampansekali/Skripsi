@@ -17,6 +17,10 @@ class Waste extends Model
         'catatan',
     ];
 
+    protected $casts = [
+        'tanggal' => 'date',
+    ];
+
     public function items()
     {
         return $this->hasMany(WasteItem::class);

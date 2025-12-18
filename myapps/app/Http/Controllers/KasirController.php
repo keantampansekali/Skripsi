@@ -38,10 +38,10 @@ class KasirController extends Controller
 
         $produks = $query->orderBy('nama_produk')->get();
         
-        // Hitung maksimal produk yang bisa dijual berdasarkan stok bahan baku
-        $produks->each(function($produk) use ($resepService) {
-            $produk->max_producible_quantity = $resepService->calculateMaxProducibleQuantity($produk);
-        });
+        // Tidak perlu hitung max_producible_quantity, gunakan stok produk langsung
+        // $produks->each(function($produk) use ($resepService) {
+        //     $produk->max_producible_quantity = $resepService->calculateMaxProducibleQuantity($produk);
+        // });
         
         return view('kasir.index', compact('produks'));
     }

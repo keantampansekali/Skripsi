@@ -10,6 +10,7 @@ use App\Events\StokUpdated;
 use App\Events\PenyesuaianStokCreated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class PenyesuaianStokController extends Controller
 {
@@ -103,9 +104,12 @@ class PenyesuaianStokController extends Controller
             // Broadcast penyesuaian created
             try {
                 $penyesuaian->load('items.bahan');
+                $tanggal = $penyesuaian->tanggal instanceof Carbon 
+                    ? $penyesuaian->tanggal->format('d/m/Y')
+                    : Carbon::parse($penyesuaian->tanggal)->format('d/m/Y');
                 broadcast(new PenyesuaianStokCreated($validated['id_cabang'], [
                     'id' => $penyesuaian->id,
-                    'tanggal' => $penyesuaian->tanggal->format('d/m/Y'),
+                    'tanggal' => $tanggal,
                     'catatan' => $penyesuaian->catatan,
                 ]));
             } catch (\Exception $e) {

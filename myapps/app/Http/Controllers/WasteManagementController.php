@@ -11,6 +11,7 @@ use App\Events\WasteCreated;
 use App\Events\StokRendah;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class WasteManagementController extends Controller
 {
@@ -181,9 +182,12 @@ class WasteManagementController extends Controller
             // Broadcast waste created
             try {
                 $waste->load('items.bahan', 'items.produk');
+                $tanggal = $waste->tanggal instanceof Carbon 
+                    ? $waste->tanggal->format('d/m/Y')
+                    : Carbon::parse($waste->tanggal)->format('d/m/Y');
                 broadcast(new WasteCreated($validated['id_cabang'], [
                     'id' => $waste->id,
-                    'tanggal' => $waste->tanggal->format('d/m/Y'),
+                    'tanggal' => $tanggal,
                     'catatan' => $waste->catatan,
                 ]));
             } catch (\Exception $e) {
