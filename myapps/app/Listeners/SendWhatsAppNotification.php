@@ -4,6 +4,7 @@ namespace App\Listeners;
 
 use App\Events\StokHabis;
 use App\Services\WhatsAppService;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class SendWhatsAppNotification
@@ -32,6 +33,13 @@ class SendWhatsAppNotification
         try {
             $bahanBaku = $event->bahanBaku;
             
+            // Deduplication: cek apakah notifikasi untuk bahan baku ini sudah dikirim dalam 5 menit terakhir
+            $cacheKey = "whatsapp_stok_habis_bahan_baku_{$bahanBaku->id}_cabang_{$bahanBaku->id_cabang}";
+            if (Cache::has($cacheKey)) {
+                Log::info("WhatsApp notification skipped (deduplication): bahan_baku ID {$bahanBaku->id} at cabang {$bahanBaku->id_cabang}");
+                return;
+            }
+            
             // Ambil nama cabang jika ada
             $cabangName = null;
             if ($bahanBaku->id_cabang) {
@@ -47,6 +55,8 @@ class SendWhatsAppNotification
             );
 
             if ($result['success']) {
+                // Simpan flag di cache selama 5 menit untuk mencegah duplikasi
+                Cache::put($cacheKey, true, now()->addMinutes(5));
                 Log::info('WhatsApp notification sent successfully for: ' . $bahanBaku->nama_bahan);
             } else {
                 Log::warning('Failed to send WhatsApp notification: ' . ($result['message'] ?? 'Unknown error'));

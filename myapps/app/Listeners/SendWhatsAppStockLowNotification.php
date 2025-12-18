@@ -4,6 +4,7 @@ namespace App\Listeners;
 
 use App\Events\StokRendah;
 use App\Services\WhatsAppService;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class SendWhatsAppStockLowNotification
@@ -33,6 +34,14 @@ class SendWhatsAppStockLowNotification
             $item = $event->item;
             $tipe = $event->tipe;
             $stokBaru = $event->stokBaru;
+            $idCabang = $event->idCabang;
+            
+            // Deduplication: cek apakah notifikasi untuk item ini sudah dikirim dalam 5 menit terakhir
+            $cacheKey = "whatsapp_stok_rendah_{$tipe}_{$item->id}_cabang_{$idCabang}";
+            if (Cache::has($cacheKey)) {
+                Log::info("WhatsApp notification skipped (deduplication): {$tipe} ID {$item->id} at cabang {$idCabang}");
+                return;
+            }
             
             // Ambil nama cabang jika ada
             $cabangName = null;
@@ -60,6 +69,8 @@ class SendWhatsAppStockLowNotification
             );
 
             if ($result['success']) {
+                // Simpan flag di cache selama 5 menit untuk mencegah duplikasi
+                Cache::put($cacheKey, true, now()->addMinutes(5));
                 Log::info('WhatsApp low stock notification sent successfully for: ' . $itemName);
             } else {
                 Log::warning('Failed to send WhatsApp low stock notification: ' . ($result['message'] ?? 'Unknown error'));

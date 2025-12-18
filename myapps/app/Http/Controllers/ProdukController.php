@@ -6,8 +6,10 @@ use App\Models\Produk;
 use App\Models\Cabang;
 use App\Events\ProdukUpdated;
 use App\Events\StokUpdated;
+use App\Services\ResepService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class ProdukController extends Controller
 {
@@ -108,16 +110,21 @@ class ProdukController extends Controller
         return view('master.produk.show', compact('produk'));
     }
 
-    public function edit(Produk $produk)
+    public function edit(Produk $produk, ResepService $resepService)
     {
         $cabang = Cabang::orderBy('nama_cabang')->get();
+        
+        // Hitung maksimal stok yang bisa di-set berdasarkan bahan baku
+        $maxProducible = $resepService->calculateMaxProducibleQuantity($produk, $produk->id_cabang);
+        
         return view('master.produk.edit', [
             'produk' => $produk,
             'cabang' => $cabang,
+            'maxProducible' => $maxProducible,
         ]);
     }
 
-    public function update(Request $request, Produk $produk)
+    public function update(Request $request, Produk $produk, ResepService $resepService)
     {
         $rules = [
             'nama_produk' => ['required', 'string', 'max:255'],
@@ -137,6 +144,16 @@ class ProdukController extends Controller
 
         // Cabang tidak dapat diubah saat edit, gunakan nilai yang sudah ada
         $validated['id_cabang'] = $produk->id_cabang;
+
+        // Validasi stok tidak boleh melebihi kapasitas bahan baku
+        $stokBaru = (int) $validated['stok'];
+        $maxProducible = $resepService->calculateMaxProducibleQuantity($produk, $produk->id_cabang);
+        
+        if ($stokBaru > $maxProducible) {
+            throw ValidationException::withMessages([
+                'stok' => "Stok tidak boleh melebihi {$maxProducible} unit. Kapasitas produksi terbatas oleh ketersediaan bahan baku.",
+            ]);
+        }
 
         DB::transaction(function () use ($produk, $validated, $request) {
             if ($request->hasFile('foto')) {

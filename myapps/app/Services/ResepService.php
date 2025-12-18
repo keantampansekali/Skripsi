@@ -12,11 +12,60 @@ use Illuminate\Support\Facades\Log;
 class ResepService
 {
     /**
+     * Hitung maksimal produk yang bisa dibuat berdasarkan stok bahan baku
+     * 
+     * @param Produk $produk
+     * @param int|null $idCabang
+     * @return int Maksimal quantity produk yang bisa dibuat (0 jika tidak ada resep atau bahan baku habis)
+     */
+    public function calculateMaxProducibleQuantity(Produk $produk, ?int $idCabang = null): int
+    {
+        $idCabang = $idCabang ?? session('id_cabang');
+        
+        // Cari resep yang terkait dengan produk di cabang yang sama
+        $resep = Resep::where('produk_id', $produk->id)
+            ->where('id_cabang', $idCabang)
+            ->first();
+        
+        // Jika produk tidak punya resep, kembalikan stok produk saat ini (tidak dibatasi oleh bahan baku)
+        if (!$resep) {
+            return $produk->stok;
+        }
+
+        $resep->load('items.bahan');
+        $maxQuantities = [];
+
+        foreach ($resep->items as $item) {
+            $bahan = $item->bahan;
+            if (!$bahan || $item->qty <= 0) {
+                continue;
+            }
+
+            // Cek stok bahan baku di cabang yang sama
+            $stokTersedia = BahanBaku::where('id', $bahan->id)
+                ->where('id_cabang', $idCabang)
+                ->value('stok') ?? 0;
+
+            // Hitung maksimal produk yang bisa dibuat dari bahan baku ini
+            $maxFromThisBahan = floor($stokTersedia / $item->qty);
+            $maxQuantities[] = $maxFromThisBahan;
+        }
+
+        // Jika tidak ada item resep, return stok produk saat ini
+        if (empty($maxQuantities)) {
+            return $produk->stok;
+        }
+
+        // Return minimum dari semua maksimal (bottleneck)
+        return min($maxQuantities);
+    }
+
+    /**
      * Cek ketersediaan bahan baku untuk membuat produk berdasarkan resep
      * 
      * @param Produk $produk
      * @param int $quantity Jumlah produk yang akan dibuat/dijual
-     * @return array ['available' => bool, 'missing' => array, 'message' => string]
+     * @return array ['available' => bool, 'missing' => array, 'message' => string, 'max_quantity' => int]
      */
     public function checkBahanBakuAvailability(Produk $produk, int $quantity): array
     {
@@ -27,12 +76,16 @@ class ResepService
             ->where('id_cabang', $idCabang)
             ->first();
         
+        // Hitung maksimal quantity yang bisa dibuat
+        $maxQuantity = $this->calculateMaxProducibleQuantity($produk, $idCabang);
+        
         // Jika produk tidak punya resep, return available
         if (!$resep) {
             return [
                 'available' => true,
                 'missing' => [],
-                'message' => 'Produk tidak memiliki resep'
+                'message' => 'Produk tidak memiliki resep',
+                'max_quantity' => $maxQuantity
             ];
         }
 
@@ -70,7 +123,8 @@ class ResepService
             'missing' => $missing,
             'message' => empty($missing) 
                 ? 'Semua bahan baku tersedia' 
-                : 'Beberapa bahan baku tidak mencukupi'
+                : 'Beberapa bahan baku tidak mencukupi',
+            'max_quantity' => $maxQuantity
         ];
     }
 

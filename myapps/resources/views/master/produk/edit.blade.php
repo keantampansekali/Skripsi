@@ -41,8 +41,28 @@
             </div>
             <div>
                 <label class="block text-sm mb-1">Stok</label>
-                <input type="number" name="stok" value="{{ old('stok', $produk->stok) }}" class="w-full px-3 py-2 border rounded dark:bg-gray-900 dark:border-gray-700" required />
-                @error('stok')<div class="text-red-600 text-xs mt-1">{{ $message }}</div>@enderror
+                <input 
+                    type="number" 
+                    name="stok" 
+                    id="stokInput"
+                    value="{{ old('stok', $produk->stok) }}" 
+                    max="{{ $maxProducible ?? 999999 }}"
+                    class="w-full px-3 py-2 border rounded dark:bg-gray-900 dark:border-gray-700" 
+                    required 
+                />
+                @error('stok')
+                    <div class="text-red-600 text-xs mt-1">{{ $message }}</div>
+                @else
+                    @if(isset($maxProducible) && $maxProducible > 0)
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1" id="stokInfo">
+                            Maksimal stok: <strong>{{ $maxProducible }} unit</strong> (dibatasi oleh ketersediaan bahan baku)
+                        </p>
+                    @elseif(isset($maxProducible) && $maxProducible == 0)
+                        <p class="text-xs text-yellow-600 dark:text-yellow-400 mt-1">
+                            ⚠️ Bahan baku tidak tersedia. Stok harus 0.
+                        </p>
+                    @endif
+                @enderror
             </div>
         </div>
 
@@ -71,6 +91,51 @@
         </div>
     </form>
 </div>
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const stokInput = document.getElementById('stokInput');
+    const maxProducible = {{ $maxProducible ?? 0 }};
+    
+    if (stokInput && maxProducible > 0) {
+        stokInput.addEventListener('input', function() {
+            const value = parseInt(this.value) || 0;
+            const stokInfo = document.getElementById('stokInfo');
+            
+            if (value > maxProducible) {
+                this.classList.add('border-red-500', 'bg-red-50', 'dark:bg-red-900/20');
+                this.classList.remove('border-gray-300', 'dark:border-gray-700');
+                
+                if (stokInfo) {
+                    stokInfo.innerHTML = `<span class="text-red-600 dark:text-red-400">⚠️ Stok melebihi kapasitas! Maksimal: <strong>${maxProducible} unit</strong></span>`;
+                }
+            } else {
+                this.classList.remove('border-red-500', 'bg-red-50', 'dark:bg-red-900/20');
+                this.classList.add('border-gray-300', 'dark:border-gray-700');
+                
+                if (stokInfo) {
+                    stokInfo.innerHTML = `Maksimal stok: <strong>${maxProducible} unit</strong> (dibatasi oleh ketersediaan bahan baku)`;
+                    stokInfo.classList.remove('text-red-600', 'dark:text-red-400');
+                    stokInfo.classList.add('text-gray-500', 'dark:text-gray-400');
+                }
+            }
+        });
+        
+        // Validasi saat submit
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const value = parseInt(stokInput.value) || 0;
+            if (value > maxProducible) {
+                e.preventDefault();
+                alert(`Stok tidak boleh melebihi ${maxProducible} unit. Kapasitas produksi terbatas oleh ketersediaan bahan baku.`);
+                stokInput.focus();
+                return false;
+            }
+        });
+    }
+});
+</script>
+@endpush
 @endsection
 
 

@@ -3,17 +3,22 @@
 namespace App\Observers;
 
 use App\Models\BahanBaku;
+use App\Models\Produk;
+use App\Models\ResepItem;
 use App\Events\StokHabis;
 use App\Events\StokRendah;
+use App\Services\ResepService;
 use Illuminate\Support\Facades\Log;
 
 class BahanBakuObserver
 {
     protected $stokRendahThreshold;
+    protected $resepService;
 
-    public function __construct()
+    public function __construct(ResepService $resepService)
     {
         $this->stokRendahThreshold = config('whatsapp.stok_rendah_threshold', 10);
+        $this->resepService = $resepService;
     }
 
     /**
@@ -41,6 +46,9 @@ class BahanBakuObserver
                 event(new StokRendah($bahanBaku, 'bahan_baku', $stokLama, $stokBaru, $bahanBaku->id_cabang));
             }
             
+            // Update stok produk yang menggunakan bahan baku ini
+            $this->updateRelatedProductStock($bahanBaku);
+            
             // Broadcast stok updated
             try {
                 \App\Events\StokUpdated::dispatch($bahanBaku->id_cabang, [
@@ -55,6 +63,55 @@ class BahanBakuObserver
         }
     }
 
+    /**
+     * Update stok produk yang terkait dengan bahan baku ini
+     */
+    protected function updateRelatedProductStock(BahanBaku $bahanBaku): void
+    {
+        try {
+            // Cari semua resep yang menggunakan bahan baku ini
+            $resepItems = ResepItem::where('bahan_baku_id', $bahanBaku->id)
+                ->with(['resep.produk'])
+                ->get();
+
+            foreach ($resepItems as $resepItem) {
+                if ($resepItem->resep && $resepItem->resep->produk) {
+                    $produk = $resepItem->resep->produk;
+                    
+                    // Skip jika produk bukan dari cabang yang sama
+                    if ($produk->id_cabang != $bahanBaku->id_cabang) {
+                        continue;
+                    }
+
+                    // Hitung maksimal produk yang bisa dibuat
+                    $maxProducible = $this->resepService->calculateMaxProducibleQuantity($produk, $bahanBaku->id_cabang);
+                    
+                    // Update stok produk jika melebihi kapasitas bahan baku
+                    if ($produk->stok > $maxProducible) {
+                        $stokLama = $produk->stok;
+                        $produk->stok = $maxProducible;
+                        $produk->saveQuietly(); // Save tanpa trigger observer lagi
+                        
+                        Log::info("Auto-adjusted product stock: {$produk->nama_produk} from {$stokLama} to {$maxProducible} (ingredient: {$bahanBaku->nama_bahan})");
+                        
+                        // Broadcast update stok produk
+                        try {
+                            \App\Events\StokUpdated::dispatch($produk->id_cabang, [
+                                'tipe' => 'produk',
+                                'id' => $produk->id,
+                                'nama' => $produk->nama_produk,
+                                'stok' => $produk->stok,
+                            ]);
+                        } catch (\Exception $e) {
+                            Log::warning('Failed to broadcast product stock update: ' . $e->getMessage());
+                        }
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            Log::error('Error updating related product stock: ' . $e->getMessage());
+        }
+    }
 
     /**
      * Handle the BahanBaku "created" event.

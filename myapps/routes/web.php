@@ -34,6 +34,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/process', [KasirController::class, 'process'])->name('process');
         Route::get('/transaksi', [KasirController::class, 'transaksi'])->name('transaksi');
         Route::get('/transaksi/print', [KasirController::class, 'printTransaksi'])->name('transaksi.print');
+        Route::get('/produk/{produk}/availability', [KasirController::class, 'checkAvailability'])->name('produk.availability');
     });
 
     // Group routes for Data Master

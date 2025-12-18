@@ -14,15 +14,21 @@ use Carbon\Carbon;
 
 class KasirController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, ResepService $resepService)
     {
+        $idCabang = session('id_cabang');
+        
         $query = Produk::query()
-            ->where('id_cabang', session('id_cabang'))
+            ->where('id_cabang', $idCabang)
             ->where('stok', '>', 0)
             ->where(function ($q) {
                 $q->where('nama_produk', 'not like', '%Nasi Goreng Spesial%')
                   ->where('nama_produk', 'not like', '%Sate%')
                   ->where('nama_produk', 'not like', '%Ikan Bakar%');
+            })
+            // Filter hanya produk yang punya resep
+            ->whereHas('resep', function($q) use ($idCabang) {
+                $q->where('id_cabang', $idCabang);
             });
 
         // Filter berdasarkan search
@@ -31,6 +37,11 @@ class KasirController extends Controller
         }
 
         $produks = $query->orderBy('nama_produk')->get();
+        
+        // Hitung maksimal produk yang bisa dijual berdasarkan stok bahan baku
+        $produks->each(function($produk) use ($resepService) {
+            $produk->max_producible_quantity = $resepService->calculateMaxProducibleQuantity($produk);
+        });
         
         return view('kasir.index', compact('produks'));
     }
@@ -427,5 +438,40 @@ class KasirController extends Controller
         $cabang = session('nama_cabang', 'Cabang');
         
         return view('kasir.print-transaksi', compact('transaksis', 'tanggal', 'totalHari', 'totalTransaksi', 'cabang'));
+    }
+
+    /**
+     * Check product availability based on ingredient stock
+     * 
+     * @param Produk $produk
+     * @param ResepService $resepService
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function checkAvailability(Produk $produk, ResepService $resepService)
+    {
+        $idCabang = (int) session('id_cabang');
+        
+        // Pastikan produk milik cabang yang sama
+        if ($produk->id_cabang != $idCabang) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Produk tidak ditemukan di cabang ini'
+            ], 404);
+        }
+
+        $maxProducible = $resepService->calculateMaxProducibleQuantity($produk, $idCabang);
+        $availability = $resepService->checkBahanBakuAvailability($produk, 1);
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'produk_id' => $produk->id,
+                'nama_produk' => $produk->nama_produk,
+                'stok_produk' => $produk->stok,
+                'max_producible' => $maxProducible,
+                'available' => $maxProducible > 0,
+                'availability_details' => $availability
+            ]
+        ]);
     }
 }
