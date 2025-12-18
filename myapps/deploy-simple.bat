@@ -39,7 +39,7 @@ echo.
 echo Connecting to server...
 echo.
 
-ssh %server_user%@72.60.78.65 "cd /var/www/html/skripsi && git pull origin main && ./deploy.sh"
+ssh %server_user%@72.60.78.65 "cd /var/www/skripsi/Skripsi/myapps && git pull origin main && ./deploy.sh"
 
 if errorlevel 1 (
     echo.
@@ -47,7 +47,7 @@ if errorlevel 1 (
     echo.
     echo Manual deployment:
     echo 1. ssh %server_user%@72.60.78.65
-    echo 2. cd /var/www/html/skripsi
+    echo 2. cd /var/www/skripsi/Skripsi/myapps
     echo 3. git pull origin main
     echo 4. ./deploy.sh
     echo.
