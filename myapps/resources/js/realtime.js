@@ -15,26 +15,107 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         try {
-            const channel = window.Echo.channel(`cabang.${idCabang}`);
-            
-            // Handle connection errors
-            window.Echo.connector.pusher.connection.bind('error', (err) => {
-                console.error('WebSocket connection error:', err);
-            });
-            
-            window.Echo.connector.pusher.connection.bind('connected', () => {
-                console.log('WebSocket connected successfully');
-            });
-            
-            window.Echo.connector.pusher.connection.bind('disconnected', () => {
-                console.warn('WebSocket disconnected');
-            });
+            // Wait for Echo to be fully initialized
+            if (!window.Echo || !window.Echo.connector) {
+                console.error('Echo connector not available');
+                return;
+            }
+
+            // Check connection state before subscribing
+            const pusher = window.Echo.connector.pusher;
+            if (!pusher || !pusher.connection) {
+                console.error('Pusher connection not available');
+                return;
+            }
+
+            // Wait for connection to be established
+            const waitForConnection = () => {
+                return new Promise((resolve, reject) => {
+                    if (pusher.connection.state === 'connected') {
+                        resolve();
+                        return;
+                    }
+
+                    const timeout = setTimeout(() => {
+                        reject(new Error('Connection timeout'));
+                    }, 10000);
+
+                    pusher.connection.bind('connected', () => {
+                        clearTimeout(timeout);
+                        resolve();
+                    });
+
+                    pusher.connection.bind('error', (err) => {
+                        clearTimeout(timeout);
+                        reject(err);
+                    });
+                });
+            };
+
+            // Subscribe to channel after connection is established
+            waitForConnection()
+                .then(() => {
+                    console.log('✅ Connected to Reverb, subscribing to channel:', `cabang.${idCabang}`);
+                    const channel = window.Echo.channel(`cabang.${idCabang}`);
+                    
+                    // Handle connection errors
+                    pusher.connection.bind('error', (err) => {
+                        console.error('❌ WebSocket connection error:', err);
+                        if (err.error) {
+                            console.error('Error details:', err.error);
+                        }
+                    });
+                    
+                    pusher.connection.bind('connected', () => {
+                        console.log('✅ WebSocket connected successfully');
+                    });
+                    
+                    pusher.connection.bind('disconnected', () => {
+                        console.warn('⚠️ WebSocket disconnected');
+                    });
+
+                    // Set up event listeners
+                    setupEventListeners(channel);
+                })
+                .catch((error) => {
+                    console.error('❌ Failed to connect to Reverb:', error);
+                    console.error('Please ensure:');
+                    console.error('1. Reverb server is running: php artisan reverb:start');
+                    console.error('2. Environment variables are set correctly in .env');
+                    console.error('3. Assets are rebuilt: npm run build');
+                });
+        } catch (error) {
+            console.error('Error setting up real-time listeners:', error);
+        }
+    }, 100);
+});
+
+// Function to set up all event listeners
+function setupEventListeners(channel) {
+    console.log('✅ Setting up event listeners for channel:', channel.name);
     
     // Listen for stock updates
     channel.listen('.stok.updated', (e) => {
-        console.log('Stock updated:', e);
-        updateStockDisplay(e.data);
-        showNotification('Stok diperbarui: ' + e.data.nama, 'info');
+        console.log('📦 Stock updated event received:', e);
+        console.log('📦 Full event object:', JSON.stringify(e, null, 2));
+        
+        // Handle both event.data and direct properties
+        const eventData = e.data || e;
+        console.log('📦 Event data to process:', eventData);
+        
+        if (eventData) {
+            console.log('📦 Processing stock update for:', {
+                tipe: eventData.tipe,
+                id: eventData.id,
+                nama: eventData.nama || eventData.nama_produk,
+                stok: eventData.stok
+            });
+            
+            updateStockDisplay(eventData);
+            showNotification('Stok diperbarui: ' + (eventData.nama || eventData.nama_produk || 'Item'), 'info');
+        } else {
+            console.warn('⚠️ Event data is missing:', e);
+        }
     });
     
     // Listen for new transactions
@@ -102,6 +183,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Helper function to update stock display
     function updateStockDisplay(data) {
+        console.log('🔄 updateStockDisplay called with:', data);
+        console.log('🔄 Current pathname:', window.location.pathname);
+        
         // Update stock in kasir page
         if (window.location.pathname.includes('/kasir')) {
             const productCard = document.querySelector(`[data-product-id="${data.id}"]`);
@@ -134,15 +218,49 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Update stock in master produk page
         if (data.tipe === 'produk' && window.location.pathname.includes('/master/produk')) {
+            console.log('🔍 Looking for produk row with id:', data.id);
             const row = document.querySelector(`tr[data-produk-id="${data.id}"]`);
+            console.log('🔍 Found row:', row);
+            
             if (row) {
                 const stokCell = row.querySelector('[data-field="stok"]');
+                console.log('🔍 Found stok cell:', stokCell);
+                
                 if (stokCell) {
+                    const oldStok = stokCell.textContent.trim();
                     stokCell.textContent = data.stok;
-                    if (data.stok < 10) {
+                    console.log(`✅ Updated stok from ${oldStok} to ${data.stok}`);
+                    
+                    // Update styling
+                    if (parseInt(data.stok) < 10) {
                         stokCell.classList.add('text-red-600', 'font-bold');
                     } else {
                         stokCell.classList.remove('text-red-600', 'font-bold');
+                    }
+                    
+                    // Force visual update
+                    row.style.transition = 'background-color 0.3s';
+                    row.style.backgroundColor = 'rgba(59, 130, 246, 0.1)';
+                    setTimeout(() => {
+                        row.style.backgroundColor = '';
+                    }, 1000);
+                } else {
+                    console.warn('⚠️ Stok cell not found in row');
+                }
+            } else {
+                console.warn('⚠️ Produk row not found for id:', data.id);
+                // Try alternative selector
+                const altRow = document.querySelector(`tr[data-stock-id="${data.id}"][data-stock-type="produk"]`);
+                if (altRow) {
+                    console.log('✅ Found row with alternative selector');
+                    const stokCell = altRow.querySelector('[data-field="stok"]');
+                    if (stokCell) {
+                        stokCell.textContent = data.stok;
+                        if (parseInt(data.stok) < 10) {
+                            stokCell.classList.add('text-red-600', 'font-bold');
+                        } else {
+                            stokCell.classList.remove('text-red-600', 'font-bold');
+                        }
                     }
                 }
             }
@@ -395,9 +513,5 @@ document.addEventListener('DOMContentLoaded', function() {
             minimumFractionDigits: 0,
         }).format(amount);
     }
-        } catch (error) {
-            console.error('Error setting up real-time listeners:', error);
-        }
-    }, 100);
-});
+}
 

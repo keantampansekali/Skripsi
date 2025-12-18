@@ -186,21 +186,34 @@ class ProdukController extends Controller
             
             // Broadcast produk updated
             try {
-                broadcast(new ProdukUpdated($validated['id_cabang'], [
+                $idCabang = $validated['id_cabang'];
+                
+                \Log::info('Broadcasting ProdukUpdated for cabang: ' . $idCabang);
+                broadcast(new ProdukUpdated($idCabang, [
                     'id' => $produk->id,
                     'nama_produk' => $produk->nama_produk,
                     'harga' => $produk->harga,
                     'stok' => $produk->stok,
                 ]));
                 
-                broadcast(new StokUpdated($validated['id_cabang'], [
+                \Log::info('Broadcasting StokUpdated for cabang: ' . $idCabang, [
+                    'tipe' => 'produk',
+                    'id' => $produk->id,
+                    'nama' => $produk->nama_produk,
+                    'stok' => $produk->stok,
+                ]);
+                broadcast(new StokUpdated($idCabang, [
                     'tipe' => 'produk',
                     'id' => $produk->id,
                     'nama' => $produk->nama_produk,
                     'stok' => $produk->stok,
                 ]));
+                
+                \Log::info('Broadcast completed successfully');
             } catch (\Exception $e) {
-                \Log::warning('Failed to broadcast produk update: ' . $e->getMessage());
+                \Log::error('Failed to broadcast produk update: ' . $e->getMessage(), [
+                    'trace' => $e->getTraceAsString()
+                ]);
             }
         });
 
