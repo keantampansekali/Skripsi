@@ -79,30 +79,42 @@
     (function(){
         const rows = document.getElementById('rows');
         const add = document.getElementById('addRow');
-        function bindRemove(btn, wrapper){ btn.addEventListener('click', () => wrapper.remove()); }
+        
+        if (!rows || !add) {
+            console.error('Required elements not found');
+            return;
+        }
+        
+        function bindRemove(btn, wrapper){ 
+            btn.addEventListener('click', () => wrapper.remove()); 
+        }
+        
         rows.querySelectorAll('.remove').forEach(btn => bindRemove(btn, btn.closest('.grid')));
-        let index = {{ max(1, $supplier->contacts->count()) }};
-        add?.addEventListener('click', () => {
+        
+        // Hitung index berdasarkan jumlah kontak yang ada
+        let index = rows.querySelectorAll('.grid').length;
+        
+        add.addEventListener('click', function() {
             const wrapper = document.createElement('div');
             wrapper.className = 'grid grid-cols-1 md:grid-cols-6 gap-2';
             wrapper.innerHTML = `
-                <div class=\"md:col-span-2\">
-                    <select name=\"kontak[${index}][tipe]\" class=\"w-full px-3 py-2 border rounded dark:bg-gray-900 dark:border-gray-700\">
-                        <option value=\"telp\">Telepon</option>
-                        <option value=\"wa\">WhatsApp</option>
-                        <option value=\"email\">Email</option>
+                <div class="md:col-span-2">
+                    <select name="kontak[${index}][tipe]" class="w-full px-3 py-2 border rounded dark:bg-gray-900 dark:border-gray-700">
+                        <option value="telp">Telepon</option>
+                        <option value="wa">WhatsApp</option>
+                        <option value="email">Email</option>
                     </select>
                 </div>
-                <div class=\"md:col-span-4 flex gap-2\">
-                    <input name=\"kontak[${index}][nilai]\" placeholder=\"Nomor / Email\" class=\"w-full px-3 py-2 border rounded dark:bg-gray-900 dark:border-gray-700\" />
-                    <button type=\"button\" class=\"px-2 py-1 text-xs rounded border dark:border-gray-700 remove\">Hapus</button>
+                <div class="md:col-span-4 flex gap-2">
+                    <input name="kontak[${index}][nilai]" placeholder="Nomor / Email" class="w-full px-3 py-2 border rounded dark:bg-gray-900 dark:border-gray-700" />
+                    <button type="button" class="px-2 py-1 text-xs rounded border dark:border-gray-700 remove">Hapus</button>
                 </div>`;
             rows.appendChild(wrapper);
             bindRemove(wrapper.querySelector('.remove'), wrapper);
             index++;
         });
     })();
-@</script>
+</script>
 @endpush
 @endsection
 
