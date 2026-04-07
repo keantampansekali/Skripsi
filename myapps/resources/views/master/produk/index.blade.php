@@ -16,6 +16,9 @@
         <span class="font-medium">{{ session('nama_cabang', 'Tidak ada cabang') }}</span>
     </div>
     <div class="flex items-center gap-2">
+        <!-- <a href="{{ route('hello-world') }}" class="px-3 py-2 rounded border dark:border-gray-700 text-sm hover:bg-gray-50 dark:hover:bg-gray-700">
+            Hello World
+        </a> -->
         <form action="{{ route('produk.index') }}" method="GET" class="flex items-center gap-2" id="searchForm">
             <input 
                 type="text" 

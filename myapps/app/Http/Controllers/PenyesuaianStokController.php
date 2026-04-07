@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\BranchHelper;
 use App\Models\PenyesuaianStok;
 use App\Models\PenyesuaianItem;
 use App\Models\BahanBaku;
@@ -131,6 +132,57 @@ class PenyesuaianStokController extends Controller
 
         $penyesuaian->load('items.bahan');
         return view('inventori.penyesuaian.show', compact('penyesuaian'));
+    }
+
+    public function destroy(PenyesuaianStok $penyesuaian)
+    {
+        if (!BranchHelper::isOwner()) {
+            abort(403, 'Anda tidak memiliki akses untuk menghapus penyesuaian stok.');
+        }
+
+        $idCabang = (int) session('id_cabang');
+        if ($penyesuaian->id_cabang !== $idCabang) {
+            abort(403, 'Unauthorized');
+        }
+
+        $penyesuaian->load('items.bahan');
+
+        DB::transaction(function () use ($penyesuaian, $idCabang) {
+            foreach ($penyesuaian->items as $item) {
+                if (!$item->bahan_baku_id) {
+                    continue;
+                }
+
+                $bahan = BahanBaku::find($item->bahan_baku_id);
+                if (!$bahan) {
+                    continue;
+                }
+
+                // Undo penyesuaian dengan membalik selisih (stok sekarang - selisih lama).
+                $stokSetelahRollback = $bahan->stok - $item->selisih;
+                $bahan->update(['stok' => max(0, $stokSetelahRollback)]);
+
+                try {
+                    broadcast(new StokUpdated($idCabang, [
+                        'tipe' => 'bahan_baku',
+                        'id' => $bahan->id,
+                        'nama' => $bahan->nama_bahan,
+                        'stok' => $bahan->stok,
+                    ]));
+                } catch (\Exception $e) {
+                    \Log::warning('Failed to broadcast stock rollback: ' . $e->getMessage());
+                }
+            }
+
+            StockMovement::where('ref_type', 'penyesuaian')
+                ->where('ref_id', $penyesuaian->id)
+                ->delete();
+
+            $penyesuaian->items()->delete();
+            $penyesuaian->delete();
+        });
+
+        return redirect()->route('penyesuaian.index')->with('success', 'Penyesuaian stok berhasil dihapus dan stok telah disesuaikan kembali.');
     }
 }
 

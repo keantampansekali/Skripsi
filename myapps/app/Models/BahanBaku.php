@@ -23,6 +23,22 @@ class BahanBaku extends Model
         'stok' => 'integer',
         'harga_satuan' => 'decimal:2',
     ];
+
+    // Relasi dengan resep items
+    public function resepItems()
+    {
+        return $this->hasMany(ResepItem::class, 'bahan_baku_id');
+    }
+
+    // Method untuk mendapatkan resep yang menggunakan bahan baku ini
+    public function getUsedInReseps()
+    {
+        return $this->resepItems()
+            ->with('resep')
+            ->get()
+            ->pluck('resep')
+            ->unique('id');
+    }
 }
 
 

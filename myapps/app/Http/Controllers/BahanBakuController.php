@@ -151,6 +151,22 @@ class BahanBakuController extends Controller
 
     public function destroy(BahanBaku $bahan_baku)
     {
+        // Cek apakah bahan baku digunakan di resep
+        $usedInReseps = DB::table('resep_items')
+            ->join('resep', 'resep_items.resep_id', '=', 'resep.id')
+            ->where('resep_items.bahan_baku_id', $bahan_baku->id)
+            ->select('resep.id', 'resep.nama_resep')
+            ->get();
+
+        if ($usedInReseps->count() > 0) {
+            $resepList = $usedInReseps->pluck('nama_resep')->toArray();
+            $resepNames = implode(', ', $resepList);
+            
+            return redirect()
+                ->route('bahan-baku.index')
+                ->with('error', 'Bahan baku tidak dapat dihapus karena sedang digunakan di resep: ' . $resepNames);
+        }
+
         $bahan_baku->delete();
         return redirect()->route('bahan-baku.index')->with('success', 'Bahan baku berhasil dihapus');
     }

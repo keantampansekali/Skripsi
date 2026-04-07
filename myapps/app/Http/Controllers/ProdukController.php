@@ -46,38 +46,36 @@ class ProdukController extends Controller
             'harga' => ['required', 'numeric', 'min:0'],
             'stok' => ['required', 'integer', 'min:0'],
             'id_cabang' => ['nullable', 'integer', 'exists:tabel_cabang,id_cabang'],
+            'foto' => ['required', 'file', 'image', 'mimes:jpeg,jpg,png,gif', 'max:2048'],
         ];
         
-        // Validasi foto hanya jika ada file yang diupload
-        if ($request->hasFile('foto')) {
-            $rules['foto'] = ['required', 'file', 'image', 'max:2048'];
-        } else {
-            $rules['foto'] = ['nullable'];
-        }
-        
-        $validated = $request->validate($rules);
+        $validated = $request->validate($rules, [
+            'foto.required' => 'Foto produk wajib diupload.',
+            'foto.image' => 'File harus berupa gambar.',
+            'foto.mimes' => 'Foto harus berformat: jpeg, jpg, png, atau gif.',
+            'foto.max' => 'Ukuran foto maksimal 2MB.',
+        ]);
 
         $validated['id_cabang'] = $validated['id_cabang']
             ?? (int) (session('id_cabang'));
 
         DB::transaction(function () use ($validated, $request) {
-            if ($request->hasFile('foto')) {
-                $foto = $request->file('foto');
-                
-                // Pastikan folder uploads/produk ada
-                $uploadPath = public_path('uploads/produk');
-                if (!file_exists($uploadPath)) {
-                    mkdir($uploadPath, 0755, true);
-                }
-                
-                // Sanitize nama file dan tambahkan timestamp
-                $originalName = $foto->getClientOriginalName();
-                $extension = $foto->getClientOriginalExtension();
-                $fileName = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', pathinfo($originalName, PATHINFO_FILENAME)) . '.' . $extension;
-                
-                $foto->move($uploadPath, $fileName);
-                $validated['foto'] = 'uploads/produk/' . $fileName;
+            // Upload foto (wajib pada create)
+            $foto = $request->file('foto');
+            
+            // Pastikan folder uploads/produk ada
+            $uploadPath = public_path('uploads/produk');
+            if (!file_exists($uploadPath)) {
+                mkdir($uploadPath, 0755, true);
             }
+            
+            // Sanitize nama file dan tambahkan timestamp
+            $originalName = $foto->getClientOriginalName();
+            $extension = $foto->getClientOriginalExtension();
+            $fileName = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', pathinfo($originalName, PATHINFO_FILENAME)) . '.' . $extension;
+            
+            $foto->move($uploadPath, $fileName);
+            $validated['foto'] = 'uploads/produk/' . $fileName;
             
             // Create produk - Observer will handle broadcasting automatically
             $produk = Produk::create($validated);

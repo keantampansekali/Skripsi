@@ -14,6 +14,11 @@
             @if($produk->foto)
                 <div class="mb-2">
                     <img src="{{ asset($produk->foto) }}" alt="{{ $produk->nama_produk }}" class="w-32 h-32 object-cover rounded border" />
+                    <p class="text-xs text-green-600 dark:text-green-400 mt-1">✓ Foto sudah ada</p>
+                </div>
+            @else
+                <div class="mb-2">
+                    <p class="text-xs text-yellow-600 dark:text-yellow-400">⚠️ Belum ada foto. Disarankan untuk mengupload foto.</p>
                 </div>
             @endif
             <input type="file" name="foto" accept="image/*" class="w-full px-3 py-2 border rounded dark:bg-gray-900 dark:border-gray-700" />

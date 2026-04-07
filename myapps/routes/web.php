@@ -28,6 +28,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/stats', [DashboardController::class, 'getStats'])->name('dashboard.stats');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+    // Halaman sederhana (testing)
+    // Route::get('/hello-world', function () {
+    //     return view('hello-world');
+    // })->name('hello-world');
+
     // Sistem Kasir
     Route::prefix('kasir')->name('kasir.')->group(function () {
         Route::get('/', [KasirController::class, 'index'])->name('index');
@@ -54,7 +59,7 @@ Route::middleware('auth')->group(function () {
     // Inventori
     Route::prefix('inventori')->group(function () {
         Route::resource('restock', RestockController::class)->only(['index','create','store','show']);
-        Route::resource('penyesuaian', PenyesuaianStokController::class)->only(['index','create','store','show']);
+        Route::resource('penyesuaian', PenyesuaianStokController::class)->only(['index','create','store','show','destroy']);
         Route::resource('waste-management', WasteManagementController::class)->only(['index','create','store','show','destroy']);
         Route::get('laporan-stok', [LaporanStokController::class, 'index'])->name('laporan-stok.index');
         Route::get('laporan-stok/export', [LaporanStokController::class, 'export'])->name('laporan-stok.export');

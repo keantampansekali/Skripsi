@@ -36,7 +36,11 @@ class ResepController extends Controller
     public function create()
     {
         $idCabang = (int) session('id_cabang');
-        $produks = Produk::where('id_cabang', $idCabang)->orderBy('nama_produk')->get();
+        $produks = Produk::query()
+            ->where('id_cabang', $idCabang)
+            ->whereDoesntHave('resep')
+            ->orderBy('nama_produk')
+            ->get();
         $bahan = BahanBaku::where('id_cabang', $idCabang)->orderBy('nama_bahan')->get();
         return view('master.resep.create', compact('produks', 'bahan'));
     }
@@ -106,7 +110,10 @@ class ResepController extends Controller
         }
         
         $resep->load('items');
-        $produks = Produk::where('id_cabang', $idCabang)->orderBy('nama_produk')->get();
+        $produks = Produk::query()
+            ->where('id_cabang', $idCabang)
+            ->orderBy('nama_produk')
+            ->get();
         $bahan = BahanBaku::where('id_cabang', $idCabang)->orderBy('nama_bahan')->get();
         return view('master.resep.edit', compact('resep', 'produks', 'bahan'));
     }

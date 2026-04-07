@@ -16,7 +16,7 @@
         </div>
 
         <div>
-            <label class="block text-sm mb-1">Produk (opsional)</label>
+            <label class="block text-sm mb-1">Produk</label>
             <select name="produk_id" class="w-full px-3 py-2 border rounded dark:bg-gray-900 dark:border-gray-700">
                 <option value="">-</option>
                 @foreach($produks as $p)

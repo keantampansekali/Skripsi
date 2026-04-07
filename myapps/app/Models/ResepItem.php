@@ -21,6 +21,11 @@ class ResepItem extends Model
     {
         return $this->belongsTo(BahanBaku::class, 'bahan_baku_id');
     }
+
+    public function resep()
+    {
+        return $this->belongsTo(Resep::class, 'resep_id');
+    }
 }
 
 
