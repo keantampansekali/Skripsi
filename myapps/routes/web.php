@@ -29,9 +29,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     // Halaman sederhana (testing)
-    // Route::get('/hello-world', function () {
-    //     return view('hello-world');
-    // })->name('hello-world');
+    Route::get('/hello-world', function () {
+        return view('hello-world');
+    })->name('hello-world');
 
     // Sistem Kasir
     Route::prefix('kasir')->name('kasir.')->group(function () {
